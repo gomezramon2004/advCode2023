@@ -105,10 +105,8 @@ int adv2First(std::string textFile) {
 
         }
 
-        if (!isFull) {
-            result += index;
-            isFull = false;
-        }
+        if (!isFull) result += index;
+        isFull = false;
         ++index;
     }
 
@@ -150,12 +148,12 @@ int adv2Last(std::string textFile) {
 // ADV 3 - FIRST PART
 
 int adv3First(std::string textFile) {
-    std::ifstream inputFile(textFile);
+    std::ifstream inputFile(textFile);      // Input Stream from the textfile
     std::string line;
-    const size_t LINE_COUNT = std::count_if(std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>(), [](char c) { return c == '\n'; }); 
-    std::cout << LINE_COUNT << "\n";
+    std::getline(inputFile, line);          // Get the first line and check its size
+    const size_t SIZE_LINE = line.size();
+    const size_t LINE_COUNT = std::count_if(std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>(), [](char c) { return c == '\n'; }) + 1; // Count all of the lines from the textfile
+    inputFile.seekg(0);                     // Reset file pointer to the beginning
+    
 
-    while (std::getline(inputFile, line)) {
-
-    }
 }
