@@ -4,77 +4,77 @@
 // ADV 1 - FIRST PART
 
 int adv1First(std::string textFile) {
-    std::ifstream inputFile(textFile);
-    int result = 0;
-    std::string line, resultString;
+    std::ifstream inputFile(textFile);                      // Input stream from the textfile.
+    int totalResult = 0;                                    // Total result.
+    std::string line, lineResult;                           // n-Line from the textfile.  Result from each line.
  
-    while (std::getline(inputFile, line)) {
-        resultString = "";
-        for (size_t i = 0; i < line.length(); i++) {
+    while (std::getline(inputFile, line)) {                 // For each line in the textfile.
+        lineResult = "";
+        for (size_t i = 0; i < line.length(); i++) {            // Iterate all of the chars from one line, break if it found a digit.
             if (isdigit(line[i])) {
-                resultString += line[i];  
+                lineResult += line[i];  
                 break;
             }
         }
 
-        for (int i = line.length() - 1; i >= 0; i--) {
+        for (int i = line.length() - 1; i >= 0; i--) {          // Iterate all of the chars from one line in reverse, break if it found a digit.
             if (isdigit(line[i])) {
-                resultString += line[i];
+                lineResult += line[i];
                 break;
             }
         }
         
-        result += stoi(resultString);
+        totalResult += stoi(lineResult);                        // Convert the line result in integer, then add it to the total result.
     }
 
-    return result;
+    return totalResult;
 }
 
 // ADV 1 - LAST PART
 
 int adv1Last(std::string textFile) {
-    std::ifstream inputFile(textFile);
-    int result = 0;
-    std::string line, resultString, blankline;
-    std::map<std::string, int> nums;
-    emplaceMap(nums, result);
-    bool valFound;
+    std::ifstream inputFile(textFile);                              // Input stream from the textfile.
+    int totalResult = 0;                                            // Total result.
+    std::string line, lineResult, blankline;                        // n-Line from the textfile.  Result from each line. Blankline to fill up a number word.
+    std::map<std::string, int> nums;                                // Hashtable: [Keys: Number Word / Values: Its Numberized Value].
+    emplaceMap(nums, totalResult);                                  // Emplace content inside of the hashtable. Create a pointer array of words, then iterate the list.
+    bool valFound;                                                  // Boolean value for if the program found a number word.
  
-    while (std::getline(inputFile, line)) {
-        resultString = "";
+    while (std::getline(inputFile, line)) {                         // For each line in the textfile.
+        lineResult= "";
         
-        for (size_t i = 0; i < line.length(); i++) {
+        for (size_t i = 0; i < line.length(); i++) {                    // Iterate all of the chars from one line, break if it found a digit or a number word.
             if (valFound) {
                 valFound = false;
                 break;
             }
             else if (isdigit(line[i])) {
-                resultString += line[i];
+                lineResult += line[i];
                 break;
             } else {
-                blankline.insert(blankline.end(), line[i]);
-                checkKey(nums, resultString, valFound, blankline);
+                blankline.insert(blankline.end(), line[i]);                     
+                checkKey(nums, lineResult, valFound, blankline);                // Iterate the keys and check if it correspond to the blankline.
             }
         }
 
-        for (int i = line.length() - 1; i >= 0; i--) {
+        for (int i = line.length() - 1; i >= 0; i--) {                  // Iterate all of the chars from one line in reverse, break if it found a digit or a number word.
             if (valFound) {
                 valFound = false;
                 break;
             }
             else if (isdigit(line[i])) {
-                resultString += line[i];
+                lineResult += line[i];
                 break;
             } else {
                 blankline.insert(blankline.begin(), line[i]);
-                checkKey(nums, resultString, valFound, blankline);
+                checkKey(nums, lineResult, valFound, blankline);                // Iterate the keys and check if it correspond to the blankline.
             } 
         }
         
-        result += stoi(resultString);
+        totalResult += stoi(lineResult);                                // Convert the line result in integer, then add it to the total result.
     }
 
-    return result;
+    return totalResult;
 }
 
 // ADV 2 - FIRST PART
@@ -148,12 +148,11 @@ int adv2Last(std::string textFile) {
 // ADV 3 - FIRST PART
 
 int adv3First(std::string textFile) {
-    std::ifstream inputFile(textFile);      // Input Stream from the textfile
+    std::ifstream inputFile(textFile);              // Input Stream from the textfile
     std::string line;
-    std::getline(inputFile, line);          // Get the first line and check its size
+    std::getline(inputFile, line);                  // Get the first line and check its size
     const size_t SIZE_LINE = line.size();
     const size_t LINE_COUNT = std::count_if(std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>(), [](char c) { return c == '\n'; }) + 1; // Count all of the lines from the textfile
-    inputFile.seekg(0);                     // Reset file pointer to the beginning
+    inputFile.seekg(0);                             // Reset file pointer to the beginning
     
-
 }
