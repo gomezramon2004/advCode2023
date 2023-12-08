@@ -12,7 +12,7 @@ int adv1First(std::string textFile) {
         lineResult = "";
         for (size_t i = 0; i < line.length(); i++) {            // Iterate all of the chars from one line, break if it found a digit.
             if (isdigit(line[i])) {
-                lineResult += line[i];  
+                lineResult += line[i];
                 break;
             }
         }
@@ -52,7 +52,7 @@ int adv1Last(std::string textFile) {
                 lineResult += line[i];
                 break;
             } else {
-                blankline.insert(blankline.end(), line[i]);                     
+                blankline.insert(blankline.end(), line[i]);
                 checkKey(nums, lineResult, valFound, blankline);                // Iterate the keys and check if it correspond to the blankline.
             }
         }
@@ -68,7 +68,7 @@ int adv1Last(std::string textFile) {
             } else {
                 blankline.insert(blankline.begin(), line[i]);
                 checkKey(nums, lineResult, valFound, blankline);                // Iterate the keys and check if it correspond to the blankline.
-            } 
+            }
         }
         
         totalResult += stoi(lineResult);                                // Convert the line result in integer, then add it to the total result.
@@ -80,69 +80,69 @@ int adv1Last(std::string textFile) {
 // ADV 2 - FIRST PART
 
 int adv2First(std::string textFile) {
-    std::ifstream inputFile(textFile);
-    int result = 0, redCubes = 12, greenCubes = 13, blueCubes = 14, index = 1;
-    std::string line, subsets, subset;
-    bool isFull;
+    std::ifstream inputFile(textFile);                                                      // Input stream from the textfile.
+    int totalResult = 0, redCubes = 12, greenCubes = 13, blueCubes = 14, index = 1;         // Total result. Maximum amount of red, green and blue cubes. Index.
+    std::string line, subsets, subset;                                                      // n-Line from the textfile. Each group of subsets. Each subset.
+    bool isImpossible;                                                                      // Boolean value for if a specific amount of cubes can't be possible to play a game.
  
-    while (std::getline(inputFile, line)) {
-        std::istringstream iss(line.substr(line.find(":") + 1));
+    while (std::getline(inputFile, line)) {                                                 // For each line in the textfile.
+        std::istringstream iss(line.substr(line.find(":") + 1));                                // Substract the "Game #n: " part.
 
-        while (std::getline(iss, subsets, ';')) {
+        while (std::getline(iss, subsets, ';')) {                                               // For each group of subsets.
             std::istringstream iss(subsets);
             
-            while (std::getline(iss, subset, ',')) {
-                if (isdigit(subset[2])) {
-                    if (subset[4] == 'r') {
-                        if (stoi(subset.substr(1,2)) > redCubes) isFull = true;
-                    } else if (subset[4] == 'g') {
-                        if (stoi(subset.substr(1,2)) > greenCubes) isFull = true;
-                    } else {
-                        if (stoi(subset.substr(1,2)) > blueCubes) isFull = true;
+            while (std::getline(iss, subset, ',')) {                                                // For each subset.
+                if (isdigit(subset[2])) {                                                           // If the third char is a number. It means that it is a two-digit number.
+                    if (subset[4] == 'r') {                                                             // If the five char is "r", i.e red, and its value is greater, then it's impossible.
+                        if (stoi(subset.substr(1,2)) > redCubes) isImpossible = true;
+                    } else if (subset[4] == 'g') {                                                      // If the five char is "g", i.e green, and its value is greater, then it's impossible.
+                        if (stoi(subset.substr(1,2)) > greenCubes) isImpossible = true;
+                    } else {                                                                            // If the five char is "b", i.e blue, and its value is greater, then it's impossible.
+                        if (stoi(subset.substr(1,2)) > blueCubes) isImpossible = true;
                     }
                }
             }
 
         }
 
-        if (!isFull) result += index;
-        isFull = false;
+        if (!isImpossible) totalResult += index;                                                // Add the index to the total result if it found that a game is possible to play it.
+        isImpossible = false;                                                                   // Reset the boolean value for each iteration.
         ++index;
     }
 
-    return result;
+    return totalResult;
 }
 
 // ADV 2 - LAST PART
 
 int adv2Last(std::string textFile) {
-    std::ifstream inputFile(textFile);
-    int result = 0, fewerRed = 0, fewerGreen = 0, fewerBlue = 0;
-    std::string line, subsets, subset;
+    std::ifstream inputFile(textFile);                                                      // Input stream from the textfile.
+    int totalResult = 0, fewerRed = 0, fewerGreen = 0, fewerBlue = 0;                       // Total result. Maximum amount of red, green and blue cubes.
+    std::string line, subsets, subset;                                                      // n-Line from the textfile. Each group of subsets. Each subset.
  
-    while (std::getline(inputFile, line)) {
-        std::istringstream iss(line.substr(line.find(":") + 1));
+    while (std::getline(inputFile, line)) {                                                 // For each line in the textfile.
+        std::istringstream iss(line.substr(line.find(":") + 1));                                // Substract the "Game #n: " part.
 
-        while (std::getline(iss, subsets, ';')) {
+        while (std::getline(iss, subsets, ';')) {                                               // For each group of subsets.
             std::istringstream iss(subsets);
 
-            while (std::getline(iss, subset, ',')) {
-                if (subset.find("red") != std::string::npos) {
+            while (std::getline(iss, subset, ',')) {                                                // For each subset.
+                if (subset.find("red") != std::string::npos) {                                          // If the subset is red, and its value is greater, then replace the current value.
                     if (stoi(subset.substr(1,2)) > fewerRed) fewerRed = stoi(subset.substr(1,2));
-                } else if (subset.find("green") != std::string::npos) {
+                } else if (subset.find("green") != std::string::npos) {                                 // If the subset is green, and its value is greater, then replace the current value.
                     if (stoi(subset.substr(1,2)) > fewerGreen) fewerGreen = stoi(subset.substr(1,2));
-                } else {
+                } else {                                                                                // If the subset is blue, and its value is greater, then replace the current value.
                     if (stoi(subset.substr(1,2)) > fewerBlue) fewerBlue = stoi(subset.substr(1,2));
                 }
             }
 
         }
 
-        result += (fewerRed * fewerGreen * fewerBlue);
+        totalResult += (fewerRed * fewerGreen * fewerBlue);                                  // Add the product of the three values to the total result.
         fewerRed = fewerGreen = fewerBlue = 0;
     }
 
-    return result;
+    return totalResult;
 }
 
 // ADV 3 - FIRST PART
