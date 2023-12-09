@@ -148,11 +148,36 @@ int adv2Last(std::string textFile) {
 // ADV 3 - FIRST PART
 
 int adv3First(std::string textFile) {
-    std::ifstream inputFile(textFile);              // Input Stream from the textfile
-    std::string line;
-    std::getline(inputFile, line);                  // Get the first line and check its size
-    const size_t SIZE_LINE = line.size();
-    const size_t LINE_COUNT = std::count_if(std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>(), [](char c) { return c == '\n'; }) + 1; // Count all of the lines from the textfile
-    inputFile.seekg(0);                             // Reset file pointer to the beginning
+    std::ifstream inputFile(textFile);                                                                                              // Input Stream from the textfile. 
+    int totalResult = 0;                                                                                                            // Total result. 
+    std::string line, currentContainer;                                                                                             // n-Line from the textfile. Container from n number.
+    std::vector<int> it(2);                                                                                                         // Iterator of a number's series.
+
+    std::getline(inputFile, line);                                                                                                  // Get the first line and check its size.
+    const size_t SIZE_LINE = line.size();                                                                                           // Size line.
+    const size_t LINE_COUNT = std::count(std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>(), '\n') + 1;    // Total amount of lines in the textfile.
+    inputFile.seekg(0);                                                                                                             // Reset file pointer to the beginning.
+    std::vector<std::vector<char>> mtrx(SIZE_LINE, std::vector<char>(LINE_COUNT));                                                  // Initialize size of the vector.
     
+    for (size_t i = 0; i <= LINE_COUNT; i++) {                                                                                      // Add the content inside of the matrix.
+        std::getline(inputFile, line);                                                  
+        for (size_t j = 0; j < SIZE_LINE; j++) {
+            mtrx[i][j] = line[j];
+        }
+    }
+
+    for (size_t i = 0; i <= LINE_COUNT; i++) {                                              // Travel to the matrix.
+        for (size_t j = 0; j < SIZE_LINE; j++) {
+            if (isdigit(mtrx[i][j])) {                                                              // Check if certain position is a number.
+                currentContainer += mtrx[i][j];                                                         // Add the first digit to the container.
+                it[0] = j;                                                                              // Position "j" is the initial index.
+                checkNums(mtrx, it, i, j, currentContainer);                                            // Check if the consequent positions are numbers (recursive).
+                checkBorders(mtrx, it, i, currentContainer, LINE_COUNT, SIZE_LINE);                     // Check the borders of the number, find if are any symbol across the border.
+                totalResult += stoi(currentContainer);                                                  // Add the number to the total result.
+                currentContainer = "";
+            }
+        }
+    }
+
+    return totalResult;
 }
