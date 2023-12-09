@@ -43,58 +43,39 @@ void checkNums(std::vector<std::vector<char>>& matrix, std::vector<int>& it, siz
 void checkBorders(std::vector<std::vector<char>>& matrix, std::vector<int>& it, size_t& i, std::string& number, int LINE_COUNT, int SIZE_LINE) {
     bool left = false, right = false, top = false, bottom = false;
 
-    if (it[0] - 1 >= 0) {                                                   // Check left of the number.
+    if (it[0] - 1 >= 0) {                                                       // Check left of the number.
         left = true;
         if (matrix[i][it[0]-1] != '.') return;
     } 
-    if (it[1] + 1 < SIZE_LINE) {                                            // Check right of the number.
+    if (it[1] + 1 < SIZE_LINE) {                                                // Check right of the number.
         right = true;
         if (matrix[i][it[1]+1] != '.') return;
     }
 
-    if (!left) {                                                            // Check if the number is in the top-left, bottom-left and left-side of the matrix.
-        if (i == 0) {
-            for (size_t k = it[0]; k <= it[1] + 1; k++) {
-                if (matrix[i+1][k] != '.') return;
-            }
-        } else if (i == LINE_COUNT) {
-            for (size_t k = it[0]; k <= it[1] + 1; k++) {
-                if (matrix[i-1][k] != '.') return;
-            }
-        } else {
-            for (size_t k = it[0]; k <= it[1] + 1; k++) {
-                if (matrix[i-1][k] != '.' || matrix[i+1][k] != '.') return;
-            }
-        }
-    } else if (!right) {                                                    // Check if the number is in the top-right, bottom-right and right-side of the matrix.
-        if (i == 0) {
-            for (size_t k = it[0] - 1; k <= it[1]; k++) {
-                if (matrix[i+1][k] != '.') return;
-            }
-        } else if (i == LINE_COUNT) {
-            for (size_t k = it[0] - 1; k <= it[1]; k++) {
-                if (matrix[i-1][k] != '.') return;
-            }
-        } else {
-            for (size_t k = it[0] - 1; k <= it[1]; k++) {
-                if (matrix[i-1][k] != '.' || matrix[i+1][k] != '.') return;
-            }
+    if (i != 0 && i != LINE_COUNT) {                                            // Check top and bottom of the number. It is the average case, of only O(n)
+        top = bottom = true;
+        for (size_t k = it[0]; k <= it[1]; k++) {
+            if (matrix[i-1][k] != '.' || matrix[i+1][k] != '.') return;
         }
     } else {
-        if (i == 0) {                                                           // Check top-side of the matrix.
-            for (size_t k = it[0] - 1; k <= it[1] + 1; k++) {
-                if (matrix[i+1][k] != '.') return;
-            }
-        } else if (i == LINE_COUNT) {
-            for (size_t k = it[0] - 1; k <= it[1] + 1; k++) {                   // Check bottom-side of the matrix.
+        if (i != 0) {                                                           // Check top of the number.
+            top = true;
+            for (size_t k = it[0]; k <= it[1]; k++) {
                 if (matrix[i-1][k] != '.') return;
             }
-        } else {                                                                // Check the other cases
-            for (size_t k = it[0] - 1; k <= it[1] + 1; k++) {
-                if (matrix[i-1][k] != '.' || matrix[i+1][k] != '.') return;
+        }
+        if (i != LINE_COUNT) {                                                  // Check bottom of the number.
+            bottom = true;
+            for (size_t k = it[0]; k <= it[1]; k++) {
+                if (matrix[i+1][k] != '.') return;
             }
         }
     }
+    
+    if (left && top) if (matrix[i-1][it[0]-1] != '.') return;
+    if (left && bottom) if (matrix[i+1][it[0]-1] != '.') return;
+    if (right && top) if (matrix[i-1][it[1]+1] != '.') return;
+    if (right && bottom) if (matrix[i+1][it[1]+1] != '.') return;
 
     number = "0";
 }
