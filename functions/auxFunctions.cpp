@@ -41,7 +41,7 @@ void checkNums(std::vector<std::vector<char>>& matrix, std::vector<int>& it, siz
 
 // Check the borders of the number, find if are any symbol across the border.
 void checkBorders(std::vector<std::vector<char>>& matrix, std::vector<int>& it, size_t& i, std::string& number, int LINE_COUNT, int SIZE_LINE) {
-    bool left = false, right = false;
+    bool left = false, right = false, top = false, bottom = false;
 
     if (it[0] - 1 >= 0) {                                                   // Check left of the number.
         left = true;
