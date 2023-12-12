@@ -197,7 +197,7 @@ int adv3Last(std::string textFile) {
 
     for (size_t i = 0; i <= LINE_COUNT; i++) {                                              // Travel to the matrix.
         for (size_t j = 0; j < SIZE_LINE; j++) {
-            if (isdigit(mtrx[i][j])) {               // Check if certain position is a number and the position was checked previously.
+            if (isdigit(mtrx[i][j])) {                                                              // Check if certain position is a number and the position was checked previously.
                 number += mtrx[i][j];
                 it[0] = j;                                                                              // Position "j" is the beginning of the iterator.
                 checkNextDigits(mtrx, i, j, number, ptrToIt1);                                          // Check if the consequent positions are numbers (recursive).
