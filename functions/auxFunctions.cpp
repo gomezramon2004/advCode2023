@@ -97,60 +97,44 @@ void checkBorders(std::vector<std::vector<char>>& matrix, std::vector<int>& iter
 void checkGears(std::vector<std::vector<char>>& matrix, std::vector<int>& iterator, size_t& i, std::string& number, std::string& adjNumber, int LINE_COUNT, int SIZE_LINE) {
     bool left = false, right = false, top = false, bottom = false;
 
-    if (iterator[0] != 0) {                                                      // Check left of the number.
-        left = true;
-        if (matrix[i][iterator[0]-1] == '*') return checkAdjNum(matrix, i, iterator[0]-1, adjNumber, LINE_COUNT, SIZE_LINE);
-    } 
-    if (iterator[1] + 1 < SIZE_LINE) {                                            // Check right of the number.
+    if (iterator[0] != 0) left = true;                                                   // Check left of the number.
+    if (iterator[1] + 1 < SIZE_LINE) {                                                   // Check right of the number.
         right = true;
         if (matrix[i][iterator[1]+1] == '*') return checkAdjNum(matrix, i, iterator[1]+1, adjNumber, LINE_COUNT, SIZE_LINE);
 
     }
-    if (i != 0) {                                                           // Check top of the number.
-        top = true;
-        for (size_t k = iterator[0]; k <= iterator[1]; k++) {
-            if (matrix[i-1][k] == '*') return checkAdjNum(matrix, i-1, k, adjNumber, LINE_COUNT, SIZE_LINE);
-        }
-    }
-    if (i != LINE_COUNT) {                                                  // Check bottom of the number.
+    if (i != 0) top = true;                                                             // Check top of the number.
+    if (i != LINE_COUNT) {                                                              // Check bottom of the number.
         bottom = true;
         for (size_t k = iterator[0]; k <= iterator[1]; k++) {
             if (matrix[i+1][k] == '*') return checkAdjNum(matrix, i+1, k, adjNumber, LINE_COUNT, SIZE_LINE);
         }
     }
     
-    if (left && top) if (matrix[i-1][iterator[0]-1] == '*') return checkAdjNum(matrix, i-1, iterator[0]-1, adjNumber, LINE_COUNT, SIZE_LINE);
-    if (left && bottom) if (matrix[i+1][iterator[0]-1] == '*') return checkAdjNum(matrix, i+1, iterator[0]-1, adjNumber, LINE_COUNT, SIZE_LINE);
-    if (right && top) if (matrix[i-1][iterator[1]+1] == '*') return checkAdjNum(matrix, i-1, iterator[1]+1, adjNumber, LINE_COUNT, SIZE_LINE);
+    if (left && bottom) if (matrix[i+1][iterator[0]-1] == '*') return checkAdjNum(matrix, i+1, iterator[0]-1, adjNumber, LINE_COUNT, SIZE_LINE, false, true);
     if (right && bottom) if (matrix[i+1][iterator[1]+1] == '*') return checkAdjNum(matrix, i+1, iterator[1]+1, adjNumber, LINE_COUNT, SIZE_LINE);
+    if (right && top) if (matrix[i-1][iterator[1]+1] == '*') return checkAdjNum(matrix, i-1, iterator[1]+1, adjNumber, LINE_COUNT, SIZE_LINE, true, false);
 
     number = adjNumber = "0";
 }
 
-void checkAdjNum(std::vector<std::vector<char>>& matrix, size_t i, size_t j, std::string& adjNumber, int LINE_COUNT, int SIZE_LINE) {
+void checkAdjNum(std::vector<std::vector<char>>& matrix, size_t i, size_t j, std::string& adjNumber, int LINE_COUNT, int SIZE_LINE, bool topright, bool bottomleft) {
     bool left = false, right = false, top = false, bottom = false;
 
-    if (j != 0) {                                                       // Check left
-        left = true;
-        if (isdigit(matrix[i][j-1])) return checkLeft(matrix, i, j-1, adjNumber);
-    } 
+    if (j != 0) left = true;                                           // Check left
     if (j != SIZE_LINE) {                                              // Check right
         right = true;
         if (isdigit(matrix[i][j+1])) return checkLeft(matrix, i, j+1, adjNumber);
     }
-    if (i != 0) {                                                        // Check top
-        top = true;   
-        if (isdigit(matrix[i-1][j])) return checkLeft(matrix, i-1, j, adjNumber);
-    }
+    if (i != 0) top = true;                                             // Check top
     if (i != LINE_COUNT) {                                              // Check bottom
         bottom = true;
         if (isdigit(matrix[i+1][j])) return checkLeft(matrix, i+1, j, adjNumber);
     }
     
-    if (left && top) if (isdigit(matrix[i-1][j-1])) return checkLeft(matrix, i-1, j-1, adjNumber);
-    if (left && bottom) if (isdigit(matrix[i+1][j-1])) return checkLeft(matrix, i+1, j-1, adjNumber);
-    if (right && top) if (isdigit(matrix[i-1][j+1])) return checkLeft(matrix, i-1, j+1, adjNumber);
+    if ((left && bottom) && !topright) if (isdigit(matrix[i+1][j-1])) return checkLeft(matrix, i+1, j-1, adjNumber);
     if (right && bottom) if (isdigit(matrix[i+1][j+1])) return checkLeft(matrix, i+1, j+1, adjNumber);
+    if ((right && top)  && !topright && !bottomleft) if (isdigit(matrix[i-1][j+1])) return checkLeft(matrix, i-1, j+1, adjNumber);
 
     adjNumber = "0";
 }

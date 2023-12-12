@@ -202,6 +202,7 @@ int adv3Last(std::string textFile) {
                 it[0] = j;                                                                              // Position "j" is the beginning of the iterator.
                 checkNextDigits(mtrx, i, j, number, ptrToIt1);                                          // Check if the consequent positions are numbers (recursive).
                 checkGears(mtrx, it, i, number, adjNumber, LINE_COUNT, SIZE_LINE);                      // Check the borders of the number, find if are any symbol across the border.
+                if (number == adjNumber) adjNumber = "0";
                 totalResult += stoi(number) * stoi(adjNumber);                                          // Add the product to the total result.
                 number = adjNumber = "";
             }
