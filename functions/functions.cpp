@@ -215,27 +215,26 @@ int adv3Last(std::string textFile) {
 // ADV 4 - FIRST PART
 
 int adv4First(std::string textFile) {
-    std::ifstream inputFile(textFile);                                                                                          // Input stream from the textfile.
-    std::string line, nums;                                                                                                     // n-Line from the textfile. List of numbers.
-    int totalResult = 0, num, points, it = 0;                                                                                        // Total result. Each number. Iterator
+    std::ifstream inputFile(textFile);                                                                                  // Input stream from the textfile.
+    std::string line, nums;                                                                                             // n-Line from the textfile. List of numbers.
+    int totalResult = 0, num, points, it = 0;                                                                           // Total result. Each number. Points. Iterator.
 
-    const size_t LINE_COUNT = std::count(std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>(), '\n') + 1;
-    inputFile.seekg(0);
-    std::vector<std::vector<int>> winnerList(LINE_COUNT, std::vector<int>()), numList(LINE_COUNT, std::vector<int>());
+    const size_t LINE_COUNT = std::count(std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>(), '\n') + 1;    // Total amount of lines in the textfile.
+    inputFile.seekg(0);                                                                                                             // Reset file pointer to the beginning.
+    std::vector<std::vector<int>> winnerList(LINE_COUNT, std::vector<int>()), numList(LINE_COUNT, std::vector<int>());              // Winners and total numbers vectors.
 
-    while (std::getline(inputFile, line)) {                                                             // For each line in the textfile.
-        std::istringstream iss(line.substr(line.find(":") + 1));                                            // Substract the "Game #n: " part.
-        std::getline(iss, nums, '|');                                                                       // Substract the first part of the row; winner list.
+    while (std::getline(inputFile, line)) {                                                                             // For each line in the textfile.
+        std::istringstream iss(line.substr(line.find(":") + 1));                                                            // Substract the "Game #n: " part.
+        std::getline(iss, nums, '|');                                                                                       // Substract the first part of the row; winner list.
         std::istringstream winnerStream(nums);
-        
         while (winnerStream >> num) winnerList[it].push_back(num);
-        std::getline(iss, nums);                                                                            // Substract the last part of the row; number list.
+        std::getline(iss, nums);                                                                                            // Substract the last part of the row; number list.
         std::istringstream numStream(nums);
         while (numStream >> num) numList[it].push_back(num);
         
-        mergeSort(numList[it], 0, numList[it].size() - 1);                                                          // Mergesort
+        mergeSort(numList[it], 0, numList[it].size() - 1);                                                                  // Mergesort
 
-        for (size_t i = 0; i < winnerList[it].size(); i++) if (binarySearch(numList[it], winnerList[it][i])) points++;      // If Binary Search found the value, sum by one the iterator
+        for (size_t i = 0; i < winnerList[it].size(); i++) if (binarySearch(numList[it], winnerList[it][i])) points++;      // If Binary Search found the value, sum by one the points count.
 
         if (points == 1) totalResult += 1;
         else if (points > 1) totalResult += pow(2, points-1);
@@ -249,33 +248,31 @@ int adv4First(std::string textFile) {
 // ADV 4 - LAST PART
 
 int adv4Last(std::string textFile) {
-    std::ifstream inputFile(textFile);                                                                  // Input stream from the textfile.
-    std::string line, nums;                                                                             // n-Line from the textfile. List of numbers.
-    int totalResult = 0, num, it = 0, points = 0;                                                                   // Total result. Each number. Iterator
-    std::streampos oldpos;
+    std::ifstream inputFile(textFile);                                                                              // Input stream from the textfile.
+    std::string line, nums;                                                                                         // n-Line from the textfile. List of numbers.
+    int totalResult = 0, num, points, it = 0;                                                                       // Total result. Each number. Points. Iterator.
 
-    const size_t LINE_COUNT = std::count(std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>(), '\n') + 1;
-    inputFile.seekg(0);
-    std::vector<std::vector<int>> winnerList(LINE_COUNT, std::vector<int>());
-    std::vector<std::vector<int>> numList(LINE_COUNT, std::vector<int>());
+    const size_t LINE_COUNT = std::count(std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>(), '\n') + 1;    // Total amount of lines in the textfile.
+    inputFile.seekg(0);                                                                                                             // Reset file pointer to the beginning.
+    std::vector<std::vector<int>> winnerList(LINE_COUNT, std::vector<int>());                                                       // Winners numbers vector.
+    std::vector<std::vector<int>> numList(LINE_COUNT, std::vector<int>());                                                          // Total numbers vector.
 
-    while (std::getline(inputFile, line)) {                                                             // For each line in the textfile.
-        std::istringstream iss(line.substr(line.find(":") + 1));                                            // Substract the "Game #n: " part.
-        std::getline(iss, nums, '|');                                                                       // Substract the first part of the row; winner list.
+    while (std::getline(inputFile, line)) {                                                                         // For each line in the textfile.
+        std::istringstream iss(line.substr(line.find(":") + 1));                                                        // Substract the "Game #n: " part.
+        std::getline(iss, nums, '|');                                                                                   // Substract the first part of the row; winner list.
         std::istringstream winnerStream(nums);
-        
         while (winnerStream >> num) winnerList[it].push_back(num);
-        std::getline(iss, nums);                                                                            // Substract the last part of the row; number list.
+        std::getline(iss, nums);                                                                                        // Substract the last part of the row; number list.
         std::istringstream numStream(nums);
         while (numStream >> num) numList[it].push_back(num);
         
-        mergeSort(numList[it], 0, numList[it].size() - 1);                                                          // Mergesort
+        mergeSort(numList[it], 0, numList[it].size() - 1);                                                              // Mergesort.
         it++;
     }
         
-    for (size_t i = 0; i < winnerList.size(); i++) {
+    for (size_t i = 0; i < winnerList.size(); i++) {                                                                // For each series of winner numbers.
         points = 0;
-        for (size_t j = 0; j < winnerList[i].size(); j++) if (binarySearch(numList[i], winnerList[i][j])) points++; 
+        for (size_t j = 0; j < winnerList[i].size(); j++) if (binarySearch(numList[i], winnerList[i][j])) points++;     // If Binary Search found the value, sum by one the points count.
         recursiveScratch(totalResult, winnerList, numList, i+1, points);
         totalResult++;
     }
