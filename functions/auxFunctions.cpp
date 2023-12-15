@@ -146,3 +146,70 @@ void checkLeft(std::vector<std::vector<char>>& matrix, size_t i, size_t j, std::
     adjNumber += matrix[i][j];
     return checkNextDigits(matrix, i, j, adjNumber);
 }
+
+// ADV 4 - First Part
+
+// Merge Sort - Recursive Part
+void mergeSort(std::vector<int>& vec, int left, int right){
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+        mergeSort(vec, left, mid);
+        mergeSort(vec, mid + 1, right);
+        merge(vec, left, mid, right);
+    }
+}
+
+// Merge Sort - Merge Part
+void merge(std::vector<int>& vec, int left, int mid, int right) {
+    int n1 = mid - left + 1, n2 = right - mid, i = 0, j = 0, k = left;
+    std::vector<int> leftVec(vec.begin() + left, vec.begin() + left + n1);
+    std::vector<int> rightVec(vec.begin() + mid + 1, vec.begin() + mid + 1 + n2);
+
+    while (i < n1 && j < n2) {
+        if (leftVec[i] <= rightVec[j]) {
+            vec[k] = leftVec[i];
+            i++;
+        } else {
+            vec[k] = rightVec[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1) {
+        vec[k] = leftVec[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2) {
+        vec[k] = rightVec[j];
+        j++;
+        k++;
+    }
+}
+
+bool binarySearch(const std::vector<int>& arr, int target) {
+    int left = 0, right = arr.size() - 1;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (arr[mid] == target) return true;
+        else if (arr[mid] < target) left = mid + 1;
+        else right = mid - 1;
+    }
+
+    return false;
+}
+
+void recursiveScratch(int& total, std::vector<std::vector<int>>& winVec, std::vector<std::vector<int>>& numVec, const int oldIt, const int oldPoints) {
+    int points, limit = oldPoints + oldIt;
+    if (oldPoints + oldIt > winVec.size()) limit = winVec.size();
+
+    for (int i = oldIt; i < limit; i++) {
+        points = 0;
+        for (size_t j = 0; j < winVec[i].size(); j++) if (binarySearch(numVec[i], winVec[i][j])) points++;    // If Binary Search found the value, check by recursivity
+        recursiveScratch(total, winVec, numVec, i+1, points);
+        total++;
+    }         
+}
