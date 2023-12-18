@@ -295,31 +295,30 @@ int adv5First(std::string textFile) {
     while (seedStream >> num) seeds.emplace_back(num, false);                       // While the line has at most one number, emplace back to the vector.
     
     while (std::getline(inputFile, line)) {                                         // For each line in the textfile.
-        if (!isdigit(line[0])) {                                                        // TO FIX
-            if (line[0] == '\n') continue;
+        if (!isdigit(line[0])) {                                                        // Check if the line is empty or is a string to skip the iteration.
+            if (line.empty()) continue;
             for (auto&& [seed, checked]: seeds) checked = false;
+            allChecked = 0;
             continue;
         }
-        if (allChecked == seeds.size()) continue;                                       // TO FIX
+        if (allChecked == seeds.size()) continue;                                       // If all of the seeds are checked, then skip the iteration.
         std::istringstream mapStream(line);                                             // Input streamline for mapping line.
         for (size_t i = 0; i < map.size(); ++i) {                                       // For each line of mapping, extract a number and put in the indexed slot.
             mapStream >> num;
             map[i] = num;
         }
         for (auto&& [seed, checked]: seeds) {                                           // For each structured binding of the seed, use the logic of mapping to convert data.
-            if (checked) {                                                                  // TO FIX
-                allChecked++; 
-                continue; 
-            }
+            if (checked) continue;                                                                 // If 
             if (map[1] <= seed && map[1] + map[2] - 1 >= seed && !checked) {
                 seed = map[0] + (seed - map[1]);
                 checked = true;
+                allChecked++;
             }
         }
     }
 
-    const auto smallestPair = [](const auto& a, const auto& b) { return a.first < b.first; };           // Check the smallest of the pair.
-    const auto smallest = std::min_element(seeds.begin(), seeds.end(), &smallestPair)->first;           // Check the smalles value.
+    const auto smallestPair = [](const auto& a, const auto& b) { return a.first < b.first; };           // Check the smallest of the pair
+    const auto smallest = std::min_element(seeds.begin(), seeds.end(), smallestPair)->first;           // Check the smalles value
     return smallest;
 }       
 
