@@ -308,7 +308,7 @@ int adv5First(std::string textFile) {
             map[i] = num;
         }
         for (auto&& [seed, checked]: seeds) {                                           // For each structured binding of the seed, use the logic of mapping to convert data.
-            if (checked) continue;                                                                 // If 
+            if (checked) continue;                                                          // If checked, skip the iteration.
             if (map[1] <= seed && map[1] + map[2] - 1 >= seed && !checked) {
                 seed = map[0] + (seed - map[1]);
                 checked = true;
@@ -317,8 +317,8 @@ int adv5First(std::string textFile) {
         }
     }
 
-    const auto smallestPair = [](const auto& a, const auto& b) { return a.first < b.first; };           // Check the smallest of the pair
-    const auto smallest = std::min_element(seeds.begin(), seeds.end(), smallestPair)->first;           // Check the smalles value
+    const auto smallestPair = [](const auto& a, const auto& b) { return a.first < b.first; };           // Check the smallest of the pair.
+    const auto smallest = std::min_element(seeds.begin(), seeds.end(), smallestPair)->first;           // Check the smallest value.
     return smallest;
 }       
 
