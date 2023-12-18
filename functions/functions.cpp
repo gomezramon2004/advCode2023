@@ -279,3 +279,47 @@ int adv4Last(std::string textFile) {
 
     return totalResult;
 }
+
+// ADV 5 - FIRST PART
+
+int adv5First(std::string textFile) {
+    std::ifstream inputFile(textFile);                                                      // Input stream from the textfile.
+    long long num{};                                                                        // Number that holds an entity from the textfile;
+    std::array<long long, 3> map;                                                           // Array of each mapping list [Destination, Length and Start]
+    std::string line;                                                                       // String that holds each line from the textfile.
+    std::vector<std::pair<long long, bool>> seeds;                                                           // Each seeds and if it was checked during an iteration.
+
+    std::getline(inputFile, line);
+    std::istringstream seedStream(line.substr(line.find(":") + 1));
+    while (seedStream >> num) seeds.emplace_back(num, false);
+
+    while (std::getline(inputFile, line, '\n')) {
+        if (!isdigit(line[0])) {
+            if (line[0] == '\n') continue;
+            for (auto&& [seed, checked]: seeds) checked = false;
+            continue;
+        }
+        std::istringstream mapStream(line);
+        for (size_t i = 0; i < map.size(); ++i) {
+            mapStream >> num;
+            map[i] = num;
+        }
+        for (auto&& [seed, checked]: seeds) {
+            if (map[1] <= seed && map[1] + map[2] - 1 >= seed && !checked) {
+                seed = map[0] + (seed - map[1]);
+                checked = true;
+            }
+        }
+    }
+
+    auto smallest = std::min_element(seeds.begin(), seeds.end(), [](const auto& a, const auto& b) { return a.first < b.first; });
+    return smallest->first;
+
+}       
+
+// ADV 5 - LAST PART
+/*
+int adv5Last(std::string textFile) {
+    
+}
+*/
