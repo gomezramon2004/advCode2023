@@ -213,3 +213,12 @@ void recursiveScratch(int& total, std::vector<std::vector<int>>& winVec, std::ve
         total++;
     }         
 }
+
+void recursiveMerge(const std::vector<std::pair<long long, long long>>& seeds, const std::pair<long long, long long>& currentSeed, std::pair<long long, long long>& nextSeed, size_t& i) {
+    ++i;
+    if (i + 1 >= seeds.size()) return;
+    if (seeds[i].second >= seeds[i+1].first || seeds[i-1].second >= seeds[i+1].first) {
+        nextSeed = seeds[i+1];
+        recursiveMerge(seeds, currentSeed, nextSeed, i);
+    }
+}

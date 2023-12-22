@@ -16,3 +16,5 @@ void merge(std::vector<int>& vec, int left, int mid, int right);
 bool binarySearch(const std::vector<int>& arr, int target);
 
 void recursiveScratch(int& total, std::vector<std::vector<int>>& winVec, std::vector<std::vector<int>>& numVec, const int oldIt, const int oldPoints);
+
+void recursiveMerge(const std::vector<std::pair<long long, long long>>& seeds, const std::pair<long long, long long>& currentSeed, std::pair<long long, long long>& nextSeed, size_t& i);
