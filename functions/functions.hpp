@@ -18,4 +18,4 @@ int adv3Last(std::string textFile);
 int adv4First(std::string textFile);
 int adv4Last(std::string textFile);
 int adv5First(std::string textFile);
-long long adv5Last(std::string textFile);
+long long adv5Last(const std::string& textFile);

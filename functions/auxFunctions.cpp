@@ -214,6 +214,12 @@ void recursiveScratch(int& total, std::vector<std::vector<int>>& winVec, std::ve
     }         
 }
 
+void skipLines(std::istream& stream, int numLinesToSkip) {
+    for (int i = 0; i < numLinesToSkip; ++i) {
+        stream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+}
+
 void recursiveMerge(const std::vector<std::pair<rangeNum, bool>>& seeds, const rangeNum& currentSeed, rangeNum& nextSeed, size_t& i) {
     ++i;
     if (i + 1 >= seeds.size()) return;
@@ -221,4 +227,23 @@ void recursiveMerge(const std::vector<std::pair<rangeNum, bool>>& seeds, const r
         nextSeed = seeds[i+1].first;
         recursiveMerge(seeds, currentSeed, nextSeed, i);
     }
+}
+
+void mergeSeeds(std::vector<std::pair<rangeNum, bool>>& rangeSeeds, std::vector<std::pair<rangeNum, bool>>& mergedRangeSeeds, rangeNum& currentSeed, rangeNum& nextSeed) {
+    std::sort(rangeSeeds.begin(), rangeSeeds.end());
+    
+    for (size_t i = 0; i < rangeSeeds.size(); ++i) {
+        currentSeed = rangeSeeds[i].first;
+        nextSeed = (i + 1 == rangeSeeds.size()) ? rangeSeeds[i].first : rangeSeeds[i + 1].first;
+
+        if (currentSeed.lastNum >= nextSeed.firstNum && i + 1 != rangeSeeds.size()) {
+            recursiveMerge(rangeSeeds, currentSeed, nextSeed, i);
+            mergedRangeSeeds.emplace_back(rangeNum{ currentSeed.firstNum, std::max(nextSeed.lastNum, currentSeed.lastNum) }, false);
+        } else {
+            mergedRangeSeeds.emplace_back(currentSeed, false);
+        }
+    }
+
+    rangeSeeds = std::move(mergedRangeSeeds);
+    mergedRangeSeeds.clear();
 }

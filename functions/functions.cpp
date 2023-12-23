@@ -331,84 +331,57 @@ int adv5First(std::string textFile) {
 
 // ADV 5 - LAST PART
 
-long long adv5Last(std::string textFile) {
-   std::ifstream inputFile(textFile);                                                   // Input stream from the textfile.
-    long long startNum{}, endNum{}, offsetStart, offsetEnd;                             // Start and end of the seed range. It also receive the value of its offset range.
-    std::array<long long, 3> map;                                                       // Array of each mapping list [Destination, Length and Start]
-    std::string line;                                                                   // String that holds each line from the textfile.
-    std::vector<std::pair<rangeNum, bool>> rangeSeeds, newRangeSeeds, mergedRangeSeeds;  // Each range of seeds.
-    std::getline(inputFile, line);                                                      // First line corresponds to the total of seeds.
-    std::istringstream seedStream(line.substr(line.find(":") + 1));                     // Substract the "seeds: " part.
+long long adv5Last(const std::string& textFile) {
+    std::ifstream inputFile(textFile);                                                      // Input stream from the textfile.
+    long long startNum{}, endNum{}, offsetStart, offsetEnd;                                 // Start and end of the seed range. Also the values of its offset range.
+    std::array<long long, 3> map;                                                           // Array of each mapping list [Destination, Length and Start]
+    std::string line;                                                                       // String that holds each line from the textfile.
+    std::vector<std::pair<rangeNum, bool>> rangeSeeds, newRangeSeeds, mergedRangeSeeds;     // Each range of seeds, a temporal range and a merged range seeds.
+    rangeNum currentSeed, nextSeed;                                                         // Current and next Seed in a range of seeds
 
-    while (seedStream >> startNum) {                                                    // While the line has a range of numbers, emplace back to the vector.
+    std::getline(inputFile, line);                                                          // First line corresponds to the total of seeds.
+    std::istringstream seedStream(line.substr(line.find(":") + 1));                         // Substract the "seeds: " part.
+
+    while (seedStream >> startNum) {                                                        // While the line has a range of numbers, emplace back to the vector.
         seedStream >> endNum;
-        rangeSeeds.emplace_back(std::make_pair(rangeNum{startNum, startNum + endNum}, false));  
-    }        
+        rangeSeeds.emplace_back(rangeNum{startNum, startNum + endNum}, false);  
+    }     
 
-    while (std::getline(inputFile, line)) {                                             // For each line in the textfile.
-        if (!isdigit(line[0])) {                                                            // Check if the line is empty or is a string to skip the iteration.
-            if (line.empty()) continue;
-            std::sort(rangeSeeds.begin(), rangeSeeds.end());
-            rangeSeeds.erase(std::unique(rangeSeeds.begin(), rangeSeeds.end()), rangeSeeds.end());
-            for (size_t i = 0; i < rangeSeeds.size(); ++i) rangeSeeds[i].second = false;
-            for (int i = 0; i < rangeSeeds.size(); ++i) std::cout << rangeSeeds[i].first.firstNum << " - " << rangeSeeds[i].first.lastNum << "  ";
-            std::cout << std::endl;
-            std::cout << "\n\n";
+    skipLines(inputFile, 2);                                                                // Skip the first two lines (unnecesary).
+
+    while (std::getline(inputFile, line)) {                                                 // For each line in the textfile.
+        if (line.empty()) {                                                                     // Check if the line is empty to merge ranges and skip the void lines.
+            mergeSeeds(rangeSeeds, mergedRangeSeeds, currentSeed, nextSeed);
+            skipLines(inputFile, 1);
             continue;
         }
-        std::istringstream mapStream(line);                                             // Input streamline for mapping line.
+        std::istringstream mapStream(line);                                                     // Input streamline for mapping line.
 
-        for (size_t i = 0; i < map.size(); ++i) {                                       // For each line of mapping, extract a number and put in the indexed slot.
-            mapStream >> startNum;
-            map[i] = startNum;
+        for (auto& value : map) {                                                               // For each line of mapping, extract a number and put in the indexed slot.
+            mapStream >> value;
         }
 
-        while (!rangeSeeds.empty()) {
-            const auto [currentSeed, currentChecked] = rangeSeeds.back();
-            const auto [firstSeed, lastSeed] = currentSeed;
-            const auto [destination, start, end] = map;
+        while (!rangeSeeds.empty()) {                                                           // Unpacked the pairs, and calculate the offsets. If they coincide, calculate the new value.
+            const auto& [currentSeed, currentChecked] = rangeSeeds.back();              
+            const auto& [firstSeed, lastSeed] = currentSeed;
+            const auto& [destination, start, end] = map;
             rangeSeeds.pop_back();
             offsetStart = std::max(firstSeed, start);
             offsetEnd = std::min(lastSeed, start + end);
-            if (offsetStart < offsetEnd && !currentChecked) {
-                newRangeSeeds.emplace_back(std::make_pair(rangeNum{offsetStart - start + destination, offsetEnd - start + destination}, true));
-                if (offsetStart > firstSeed) rangeSeeds.emplace_back(std::make_pair(rangeNum{firstSeed, offsetStart}, false));
-                if (lastSeed > offsetEnd) rangeSeeds.emplace_back(std::make_pair(rangeNum{offsetEnd, lastSeed}, false));
-            } else newRangeSeeds.emplace_back(std::make_pair(rangeNum{firstSeed, lastSeed}, currentChecked));    
+            if (offsetStart < offsetEnd && !currentChecked) {                                       
+                newRangeSeeds.emplace_back(rangeNum{offsetStart - start + destination, offsetEnd - start + destination}, true);
+                if (offsetStart > firstSeed) rangeSeeds.emplace_back(rangeNum{firstSeed, offsetStart}, false);
+                if (lastSeed > offsetEnd) rangeSeeds.emplace_back(rangeNum{offsetEnd, lastSeed}, false);
+            } else newRangeSeeds.emplace_back(rangeNum{firstSeed, lastSeed}, currentChecked);    
         }
-        
-        rangeSeeds = newRangeSeeds;
+
+        rangeSeeds = std::move(newRangeSeeds);
         newRangeSeeds.clear();
     }
-    std::sort(rangeSeeds.begin(), rangeSeeds.end());
-    return rangeSeeds[0].first.firstNum;
-} 
 
-/*
-std::sort(newRangeSeeds.begin(), newRangeSeeds.end());
-newRangeSeeds.erase(std::unique(newRangeSeeds.begin(), newRangeSeeds.end()), newRangeSeeds.end());
-for (size_t i = 0; i < newRangeSeeds.size(); ++i) {
-    auto currentSeed = newRangeSeeds[i].first;
-    auto nextSeed = (i + 1 == newRangeSeeds.size()) ? newRangeSeeds[i].first : newRangeSeeds[i + 1].first;
-    if (currentSeed.lastNum >= nextSeed.firstNum && i + 1 != newRangeSeeds.size()) {
-        recursiveMerge(newRangeSeeds, currentSeed, nextSeed, i);
-        rangeSeeds.emplace_back(std::make_pair(rangeNum{ currentSeed.firstNum, std::max(nextSeed.lastNum, currentSeed.lastNum) }, true));
-    } else {
-        rangeSeeds.emplace_back(newRangeSeeds[i]);
-    }
+    mergeSeeds(rangeSeeds, mergedRangeSeeds, currentSeed, nextSeed);                            // Lastly, merge the range seeds to reduce the comparisons.
+    auto minElement = *std::min_element(rangeSeeds.begin(), rangeSeeds.end(), [](const auto& a, const auto& b) {
+        return a.first.firstNum < b.first.firstNum;
+    });
+    return minElement.first.firstNum;
 }
-
-for (size_t i = 0; i < rangeSeeds.size(); ++i) {
-    auto currentSeed = rangeSeeds[i].first;
-    auto nextSeed = (i + 1 == rangeSeeds.size()) ? rangeSeeds[i].first : rangeSeeds[i + 1].first;
-    if (currentSeed.lastNum >= nextSeed.firstNum && i + 1 != newRangeSeeds.size()) {
-        recursiveMerge(rangeSeeds, currentSeed, nextSeed, i);
-        mergedRangeSeeds.emplace_back(std::make_pair(rangeNum{ currentSeed.firstNum, std::max(nextSeed.lastNum, currentSeed.lastNum) }, false));
-    } else {
-        mergedRangeSeeds.emplace_back(currentSeed, false);
-    }
-}
-rangeSeeds = mergedRangeSeeds;
-mergedRangeSeeds.clear();
-
-*/
