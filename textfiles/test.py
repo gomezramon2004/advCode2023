@@ -19,6 +19,7 @@ for block in blocks:
             oe = min(e, b + c)
             if os < oe:
                 new.append((os - b + a, oe - b + a))
+                
                 if os > s:
                     seeds.append((s, os))
                 if e > oe:
@@ -27,7 +28,4 @@ for block in blocks:
         else:
             new.append((s, e))
     seeds = new
-    print(sorted(seeds))
-    
-
-   
+    print(sorted(new))

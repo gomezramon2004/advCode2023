@@ -17,4 +17,16 @@ bool binarySearch(const std::vector<int>& arr, int target);
 
 void recursiveScratch(int& total, std::vector<std::vector<int>>& winVec, std::vector<std::vector<int>>& numVec, const int oldIt, const int oldPoints);
 
-void recursiveMerge(const std::vector<std::pair<long long, long long>>& seeds, const std::pair<long long, long long>& currentSeed, std::pair<long long, long long>& nextSeed, size_t& i);
+struct rangeNum { 
+    long long firstNum, lastNum; 
+
+    bool operator<(const rangeNum& other) const {
+        return this->firstNum < other.firstNum || (!(other.firstNum < this->firstNum) && this->lastNum < other.lastNum);
+    }
+
+    bool operator==(const rangeNum& other) const {
+        return this->firstNum == other.firstNum && this->lastNum == other.lastNum;
+    }
+};
+
+void recursiveMerge(const std::vector<std::pair<rangeNum, bool>>& seeds, const rangeNum& currentSeed, rangeNum& nextSeed, size_t& i);
