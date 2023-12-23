@@ -271,3 +271,14 @@ void addTimeAndDistance(std::ifstream& input, std::istringstream& stream, std::s
 
     stream.clear();
 }
+
+void anotherAddTimeAndDistance(std::ifstream& input, std::istringstream& stream, std::string& line, std::string& numString, std::string& totalNum, long long& total) {
+    std::getline(input, line);
+    stream.str (line.substr(line.find(":") + 1));
+
+    while (stream >> numString) totalNum += numString ;
+
+    total = stoll(totalNum);
+    totalNum = "";
+    stream.clear();
+}

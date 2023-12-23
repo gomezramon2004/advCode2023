@@ -409,3 +409,23 @@ int adv6First(const std::string& textFile) {
 
     return total;
 }
+
+// ADV 6 - LAST PART
+long long adv6Last(const std::string& textFile) {
+    std::ifstream inputFile(textFile);                                                      // Input stream from the textfile.
+    std::string line, numString, totalNum;
+    long long total{0}, time{}, distance{};
+    std::istringstream lineStream;
+
+    anotherAddTimeAndDistance(inputFile, lineStream, line, numString, totalNum, time);
+    anotherAddTimeAndDistance(inputFile, lineStream, line, numString, totalNum, distance);
+
+    for (int j = 0; j <= time / 2; ++j) {
+        if (((time - j) * j) > distance) {
+            total = (time + 1) - (j+j);
+            break;
+        }
+    }
+
+    return total;
+}
