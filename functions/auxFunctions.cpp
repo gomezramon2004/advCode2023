@@ -118,6 +118,7 @@ void checkGears(std::vector<std::vector<char>>& matrix, std::vector<int>& iterat
     number = adjNumber = "0";
 }
 
+// Check the borders of the asterik, find if are any number.
 void checkAdjNum(std::vector<std::vector<char>>& matrix, size_t i, size_t j, std::string& adjNumber, int LINE_COUNT, int SIZE_LINE, bool topright, bool bottomleft) {
     bool left = false, right = false, top = false, bottom = false;
 
@@ -139,6 +140,8 @@ void checkAdjNum(std::vector<std::vector<char>>& matrix, size_t i, size_t j, std
     adjNumber = "0";
 }
 
+
+// Check the left side of the matrix until it can't search more.
 void checkLeft(std::vector<std::vector<char>>& matrix, size_t i, size_t j, std::string& adjNumber) {
     if (j != 0) {
         if (isdigit(matrix[i][j-1])) return checkLeft(matrix, i, j-1, adjNumber);
@@ -189,6 +192,7 @@ void merge(std::vector<int>& vec, int left, int mid, int right) {
     }
 }
 
+// Binary Search
 bool binarySearch(const std::vector<int>& arr, int target) {
     int left = 0, right = arr.size() - 1;
 
@@ -202,6 +206,9 @@ bool binarySearch(const std::vector<int>& arr, int target) {
     return false;
 }
 
+// ADV 4 - Last Part
+
+// Recurse the cards to find the correct value.
 void recursiveScratch(int& total, std::vector<std::vector<int>>& winVec, std::vector<std::vector<int>>& numVec, const int oldIt, const int oldPoints) {
     int points, limit = oldPoints + oldIt;
     if (oldPoints + oldIt > winVec.size()) limit = winVec.size();
@@ -214,12 +221,16 @@ void recursiveScratch(int& total, std::vector<std::vector<int>>& winVec, std::ve
     }         
 }
 
+// ADV 5 - Last Part
+
+// Skip the unnecessary lines
 void skipLines(std::istream& stream, int numLinesToSkip) {
     for (int i = 0; i < numLinesToSkip; ++i) {
         stream.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 }
 
+// Recurse the ranges until it can't more. 
 void recursiveMerge(const std::vector<std::pair<rangeNum, bool>>& seeds, const rangeNum& currentSeed, rangeNum& nextSeed, size_t& i) {
     ++i;
     if (i + 1 >= seeds.size()) return;
@@ -229,6 +240,7 @@ void recursiveMerge(const std::vector<std::pair<rangeNum, bool>>& seeds, const r
     }
 }
 
+// Merge the range of seeds if they overlap
 void mergeSeeds(std::vector<std::pair<rangeNum, bool>>& rangeSeeds, std::vector<std::pair<rangeNum, bool>>& mergedRangeSeeds, rangeNum& currentSeed, rangeNum& nextSeed) {
     std::sort(rangeSeeds.begin(), rangeSeeds.end());
     

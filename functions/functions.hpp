@@ -9,13 +9,13 @@
 #include <algorithm>
 #include <set>
 
-int adv1First(std::string textFile);
-int adv1Last(std::string textFile);
-int adv2First(std::string textFile);
-int adv2Last(std::string textFile);
-int adv3First(std::string textFile);
-int adv3Last(std::string textFile);
-int adv4First(std::string textFile);
-int adv4Last(std::string textFile);
-int adv5First(std::string textFile);
+int adv1First(const std::string& textFile);
+int adv1Last(const std::string& textFile);
+int adv2First(const std::string& textFile);
+int adv2Last(const std::string& textFile);
+int adv3First(const std::string& textFile);
+int adv3Last(const std::string& textFile);
+int adv4First(const std::string& textFile);
+int adv4Last(const std::string& textFile);
+int adv5First(const std::string& textFile);
 long long adv5Last(const std::string& textFile);

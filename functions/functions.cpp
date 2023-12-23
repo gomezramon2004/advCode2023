@@ -3,7 +3,7 @@
 
 // ADV 1 - FIRST PART
 
-int adv1First(std::string textFile) {
+int adv1First(const std::string& textFile) {
     std::ifstream inputFile(textFile);                      // Input stream from the textfile.
     int totalResult = 0;                                    // Total result.
     std::string line, lineResult;                           // n-Line from the textfile.  Result from each line.
@@ -32,7 +32,7 @@ int adv1First(std::string textFile) {
 
 // ADV 1 - LAST PART
 
-int adv1Last(std::string textFile) {
+int adv1Last(const std::string& textFile) {
     std::ifstream inputFile(textFile);                              // Input stream from the textfile.
     int totalResult = 0;                                            // Total result.
     std::string line, lineResult, blankline;                        // n-Line from the textfile.  Result from each line. Blankline to fill up a number word.
@@ -79,7 +79,7 @@ int adv1Last(std::string textFile) {
 
 // ADV 2 - FIRST PART
 
-int adv2First(std::string textFile) {
+int adv2First(const std::string& textFile) {
     std::ifstream inputFile(textFile);                                                      // Input stream from the textfile.
     int totalResult = 0, redCubes = 12, greenCubes = 13, blueCubes = 14, index = 1;         // Total result. Maximum amount of red, green and blue cubes. Index.
     std::string line, subsets, subset;                                                      // n-Line from the textfile. Each group of subsets. Each subset.
@@ -115,7 +115,7 @@ int adv2First(std::string textFile) {
 
 // ADV 2 - LAST PART
 
-int adv2Last(std::string textFile) {
+int adv2Last(const std::string& textFile) {
     std::ifstream inputFile(textFile);                                                      // Input stream from the textfile.
     int totalResult = 0, fewerRed = 0, fewerGreen = 0, fewerBlue = 0;                       // Total result. Maximum amount of red, green and blue cubes.
     std::string line, subsets, subset;                                                      // n-Line from the textfile. Each group of subsets. Each subset.
@@ -147,7 +147,7 @@ int adv2Last(std::string textFile) {
 
 // ADV 3 - FIRST PART
 
-int adv3First(std::string textFile) {
+int adv3First(const std::string& textFile) {
     std::ifstream inputFile(textFile);                                                      // Input Stream from the textfile. 
     int totalResult = 0;                                                                    // Total result. 
     std::string line, number;                                                               // n-Line from the textfile. Number container.
@@ -182,7 +182,7 @@ int adv3First(std::string textFile) {
 
 // ADV 3 - LAST PART
 
-int adv3Last(std::string textFile) {
+int adv3Last(const std::string& textFile) {
     std::ifstream inputFile(textFile);                                                      // Input Stream from the textfile. 
     int totalResult = 0;                                                                    // Total result. 
     std::string line, number, adjNumber;                                                    // n-Line from the textfile. Number and its adjacent.
@@ -218,7 +218,7 @@ int adv3Last(std::string textFile) {
 
 // ADV 4 - FIRST PART
 
-int adv4First(std::string textFile) {
+int adv4First(const std::string& textFile) {
     std::ifstream inputFile(textFile);                                                                                  // Input stream from the textfile.
     std::string line, nums;                                                                                             // n-Line from the textfile. List of numbers.
     int totalResult = 0, num, points, it = 0;                                                                           // Total result. Each number. Points. Iterator.
@@ -251,7 +251,7 @@ int adv4First(std::string textFile) {
 
 // ADV 4 - LAST PART
 
-int adv4Last(std::string textFile) {
+int adv4Last(const std::string& textFile) {
     std::ifstream inputFile(textFile);                                                                              // Input stream from the textfile.
     std::string line, nums;                                                                                         // n-Line from the textfile. List of numbers.
     int totalResult = 0, num, points, it = 0;                                                                       // Total result. Each number. Points. Iterator.
@@ -286,7 +286,7 @@ int adv4Last(std::string textFile) {
 
 // ADV 5 - FIRST PART
 
-int adv5First(std::string textFile) {
+int adv5First(const std::string& textFile) {
     std::ifstream inputFile(textFile);                                              // Input stream from the textfile.
     int allChecked{};                                                               // Number flag to check if all of the seeds are checked (and prevent to iterate each time).
     long long num{};                                                                // Number that holds an entity from the textfile;
