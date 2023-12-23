@@ -28,4 +28,4 @@ for block in blocks:
         else:
             new.append((s, e))
     seeds = new
-    print(sorted(new))
+print(sorted(seeds)[0])

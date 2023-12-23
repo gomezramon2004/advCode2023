@@ -331,8 +331,8 @@ int adv5First(std::string textFile) {
 
 // ADV 5 - LAST PART
 
-int adv5Last(std::string textFile) {
-std::ifstream inputFile(textFile);                                                  // Input stream from the textfile.
+long long adv5Last(std::string textFile) {
+   std::ifstream inputFile(textFile);                                                  // Input stream from the textfile.
     long long startNum{}, endNum{}, offsetStart, offsetEnd;                             // Start and end of the seed range. It also receive the value of its offset range.
     std::array<long long, 3> map;                                                       // Array of each mapping list [Destination, Length and Start]
     std::string line;                                                                   // String that holds each line from the textfile.
@@ -376,12 +376,13 @@ std::ifstream inputFile(textFile);                                              
                 newRangeSeeds.emplace_back(std::make_pair(rangeNum{offsetStart - start + destination, offsetEnd - start + destination}, true));
                 if (offsetStart > firstSeed) rangeSeeds.emplace_back(std::make_pair(rangeNum{firstSeed, offsetStart}, false));
                 if (lastSeed > offsetEnd) rangeSeeds.emplace_back(std::make_pair(rangeNum{offsetEnd, lastSeed}, false));
-            } else newRangeSeeds.emplace_back(std::make_pair(rangeNum{firstSeed, lastSeed}, false));    
+            } else newRangeSeeds.emplace_back(std::make_pair(rangeNum{firstSeed, lastSeed}, checked));    
         }
         
         std::sort(newRangeSeeds.begin(), newRangeSeeds.end());
         rangeSeeds = newRangeSeeds;
         newRangeSeeds.clear();
+
     }
 
     std::cout << "[";
@@ -412,3 +413,7 @@ for (size_t i = 0; i < newRangeSeeds.size(); ++i) {
     }
 }
 */
+
+
+
+
