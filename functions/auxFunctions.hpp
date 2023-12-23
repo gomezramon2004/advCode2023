@@ -31,3 +31,5 @@ struct rangeNum {
 void skipLines(std::istream& stream, int numLinesToSkip);
 void recursiveMerge(const std::vector<std::pair<rangeNum, bool>>& seeds, const rangeNum& currentSeed, rangeNum& nextSeed, size_t& i);
 void mergeSeeds(std::vector<std::pair<rangeNum, bool>>& rangeSeeds, std::vector<std::pair<rangeNum, bool>>& mergedRangeSeeds, rangeNum& currentSeed, rangeNum& nextSeed);
+
+void addTimeAndDistance(std::ifstream& input, std::istringstream& stream, std::string& line, int& num, std::vector<int>& vec);

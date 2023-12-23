@@ -385,3 +385,27 @@ long long adv5Last(const std::string& textFile) {
     });
     return minElement.first.firstNum;
 }
+
+
+// ADV 6 - FIRST PART
+int adv6First(const std::string& textFile) {
+    std::ifstream inputFile(textFile);                                                      // Input stream from the textfile.
+    std::string line;
+    int num{}, total{1};
+    std::vector<int> timeVec, distanceVec;
+    std::istringstream lineStream;
+
+    addTimeAndDistance(inputFile, lineStream, line, num, timeVec);
+    addTimeAndDistance(inputFile, lineStream, line, num, distanceVec);
+
+    for (int i = 0; i < timeVec.size(); ++i) {
+        for (int j = 0; j <= timeVec[i] / 2; ++j) {
+            if (((timeVec[i] - j) * j) > distanceVec[i]) {
+                total *= (timeVec[i] + 1) - (j+j);
+                break;
+            }
+        }
+    }
+
+    return total;
+}

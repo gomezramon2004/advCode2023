@@ -259,3 +259,15 @@ void mergeSeeds(std::vector<std::pair<rangeNum, bool>>& rangeSeeds, std::vector<
     rangeSeeds = std::move(mergedRangeSeeds);
     mergedRangeSeeds.clear();
 }
+
+// ADV 6 - First Part
+
+// Add time and distance
+void addTimeAndDistance(std::ifstream& input, std::istringstream& stream, std::string& line, int& num, std::vector<int>& vec) {
+    std::getline(input, line);
+    stream.str (line.substr(line.find(":") + 1));
+
+    while (stream >> num) vec.emplace_back(num);
+
+    stream.clear();
+}
