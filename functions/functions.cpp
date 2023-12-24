@@ -386,8 +386,8 @@ long long adv5Last(const std::string& textFile) {
     return minElement.first.firstNum;
 }
 
-
 // ADV 6 - FIRST PART
+
 int adv6First(const std::string& textFile) {
     std::ifstream inputFile(textFile);                                                  // Input stream from the textfile.
     std::string line;                                                                   // String that holds each line from the textfile.
@@ -424,6 +424,7 @@ int adv6First(const std::string& textFile) {
 }
 
 // ADV 6 - LAST PART
+
 long long adv6Last(const std::string& textFile) {
     std::ifstream inputFile(textFile);                                                      // Input stream from the textfile.
     std::string line, numString, totalNum;                                                  // String that holds each line from the textfile, the number casted as string, and the total.
@@ -450,6 +451,30 @@ long long adv6Last(const std::string& textFile) {
     return lastWin - firstWin + 1;
 }
 
+void checkTypeHand(std::string hand) {
+    std::vector<std::pair<char, int>> content;
+    for (int i = 0; i < hand.size(); ++i) {
+        auto itFound = std::find_if(content.begin(), content.end(), [hand_i = hand[i]](const auto& pair) {
+            return pair.first == hand_i;
+        });
+        if (itFound != content.end()) {
+            ++itFound->second;
+        } else {
+            content.emplace_back(hand[i], 1);
+        }
+    }
+
+    for (const auto& element : content) {
+        std::cout << element.first << " / " << element.second << "\n";
+    }
+    std::cout << "\n";
+}
+
 // ADV 7 - FIRST PART
-int adv7irst(const std::string& textFile) {
+int adv7First(const std::string& textFile) {
+    checkTypeHand("32T3K");
+    checkTypeHand("T55J5");
+    checkTypeHand("KK677");
+    checkTypeHand("KTJJT");
+    checkTypeHand("QQQJA");
 }
