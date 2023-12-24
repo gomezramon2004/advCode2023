@@ -391,9 +391,11 @@ long long adv5Last(const std::string& textFile) {
 int adv6First(const std::string& textFile) {
     std::ifstream inputFile(textFile);                                                      // Input stream from the textfile.
     std::string line;
-    int num{}, total{1};
+    int num{};
+    double firstWin{}, lastWin{}, total{1};
     std::vector<int> timeVec, distanceVec;
     std::istringstream lineStream;
+    //auto fixBoundary = [&](int& time, int& timeTotal, int& distTotal) { return time * (timeTotal - time) > distTotal; };
 
     addTimeAndDistance(inputFile, lineStream, line, num, timeVec);
     addTimeAndDistance(inputFile, lineStream, line, num, distanceVec);

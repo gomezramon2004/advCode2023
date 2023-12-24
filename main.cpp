@@ -12,7 +12,7 @@ int main() {
     //std::cout << adv4Last("./textfiles/in4.txt") << "\n";
     //std::cout << adv5First("./textfiles/in5.txt") << "\n";
     //std::cout << adv5Last("./textfiles/in5.txt") << "\n";
-    //std::cout << adv6First("./textfiles/in6.txt") << "\n";
+    std::cout << adv6First("./textfiles/in6.txt") << "\n";
     std::cout << adv6Last("./textfiles/in6.txt") << "\n";
 
     return 0;
