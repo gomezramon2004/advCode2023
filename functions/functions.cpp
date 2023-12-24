@@ -449,3 +449,7 @@ long long adv6Last(const std::string& textFile) {
     lastWin = fixBoundary(time, distance, (time + num) / 2, +1);
     return lastWin - firstWin + 1;
 }
+
+// ADV 7 - LAST PART
+int adv7irst(const std::string& textFile) {
+}
