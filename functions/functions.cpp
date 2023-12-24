@@ -451,6 +451,8 @@ long long adv6Last(const std::string& textFile) {
     return lastWin - firstWin + 1;
 }
 
+
+// TestDEBUG
 void checkTypeHand(std::string hand) {
     std::vector<std::pair<char, int>> content;
     for (int i = 0; i < hand.size(); ++i) {
@@ -468,7 +470,49 @@ void checkTypeHand(std::string hand) {
         std::cout << element.first << " / " << element.second << "\n";
     }
     std::cout << "\n";
+
+
+    if (content.size() == 1 ) {
+        std::cout << "Five of a kind.\n";
+        return;
+    }
+
+    if (content.size() == 2 ) {
+        if (content[0].second == 4 || content[0].second == 1) {
+            std::cout << "Four of a kind.\n";
+            return;
+        }
+        std::cout << "Full House.\n";
+        return;
+    }
+
+    if (content.size() == 3 ) {
+        for (const auto& element : content) {
+            if (element.second == 2) {
+                std::cout << "Two pair.\n";
+                return;
+            } else if (element.second == 3) {
+                std::cout << "Three of a kind.\n";
+                return;
+            }
+        }
+        std::cout << "Full House.\n";
+        return;
+    }
+
+    if (content.size() == 4 ) {
+        std::cout << "One pair.\n";
+        return;
+    }
+
+    if (content.size() == 5 ) {
+        std::cout << "High Card.\n";
+        return;
+    }
+    
 }
+
+    
 
 // ADV 7 - FIRST PART
 int adv7First(const std::string& textFile) {

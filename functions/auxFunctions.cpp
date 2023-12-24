@@ -272,7 +272,7 @@ void addTimeAndDistance(std::ifstream& input, std::istringstream& stream, std::s
     stream.clear();
 }
 
-// Fix the boundaries of the quadratic formula result.
+// Change the boundaries of the quadratic formula result.
 template <typename T>
 T fixBoundary(const T& time, const T& distance, T&& quadraticEq, const int&& edge) {
     auto boundary = [&](T t) { return t * (time - t) > distance; };
