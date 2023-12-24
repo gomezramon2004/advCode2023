@@ -272,6 +272,19 @@ void addTimeAndDistance(std::ifstream& input, std::istringstream& stream, std::s
     stream.clear();
 }
 
+template <typename T>
+T fixBoundary(const T& time, const T& distance, T&& quadraticEq, const int&& edge) {
+    auto boundary = [&](T t) { return t * (time - t) > distance; };
+    while (!boundary(quadraticEq))
+        quadraticEq -= edge;
+    while (boundary(quadraticEq + edge))
+        quadraticEq += edge;
+    return quadraticEq;
+}
+
+template int fixBoundary<int>(const int& time, const int& distance, int&& quadraticEq, const int&& edge);
+template long long fixBoundary<long long>(const long long& time, const long long& distance, long long&& quadraticEq, const int&& edge);
+
 void anotherAddTimeAndDistance(std::ifstream& input, std::istringstream& stream, std::string& line, std::string& numString, std::string& totalNum, long long& total) {
     std::getline(input, line);
     stream.str (line.substr(line.find(":") + 1));

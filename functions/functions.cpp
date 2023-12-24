@@ -289,8 +289,8 @@ int adv4Last(const std::string& textFile) {
 int adv5First(const std::string& textFile) {
     std::ifstream inputFile(textFile);                                              // Input stream from the textfile.
     int allChecked{};                                                               // Number flag to check if all of the seeds are checked (and prevent to iterate each time).
-    long long num{};                                                                // Number that holds an entity from the textfile;
-    std::array<long long, 3> map;                                                   // Array of each mapping list [Destination, Length and Start]
+    long long num{};                                                                // Number that holds an entity from the textfile.
+    std::array<long long, 3> map;                                                   // Array of each mapping list [Destination, Length and Start].
     std::string line;                                                               // String that holds each line from the textfile.
     std::vector<std::pair<long long, bool>> seeds;                                  // Each seeds and if it was checked during an iteration.
 
@@ -389,24 +389,35 @@ long long adv5Last(const std::string& textFile) {
 
 // ADV 6 - FIRST PART
 int adv6First(const std::string& textFile) {
-    std::ifstream inputFile(textFile);                                                      // Input stream from the textfile.
-    std::string line;
-    int num{};
-    double firstWin{}, lastWin{}, total{1};
-    std::vector<int> timeVec, distanceVec;
-    std::istringstream lineStream;
-    //auto fixBoundary = [&](int& time, int& timeTotal, int& distTotal) { return time * (timeTotal - time) > distTotal; };
+    std::ifstream inputFile(textFile);                                                  // Input stream from the textfile.
+    std::string line;                                                                   // String that holds each line from the textfile.
+    int num{}, firstWin{}, lastWin{}, total{1};                                         // Number that holds an entity from the textfile, the first and last way to win, and the total.
+    std::vector<int> timeVec, distanceVec;                                              // Vector of each time and distance value from the textfile.
+    std::istringstream lineStream;                                                      // Input stream that substract the content from the textfile.
 
-    addTimeAndDistance(inputFile, lineStream, line, num, timeVec);
-    addTimeAndDistance(inputFile, lineStream, line, num, distanceVec);
+    addTimeAndDistance(inputFile, lineStream, line, num, timeVec);                      // Add the content of the time vector.
+    addTimeAndDistance(inputFile, lineStream, line, num, distanceVec);                  // Add the content of the distance vector.
 
-    for (int i = 0; i < timeVec.size(); ++i) {
-        for (int j = 0; j <= timeVec[i] / 2; ++j) {
-            if (((timeVec[i] - j) * j) > distanceVec[i]) {
+    /*
+    for (int i = 0; i < timeVec.size(); ++i) {                                          // Prior wat to solve the problem, by iterating the range of time until found a way to win.
+        for (int j = 0; j <= timeVec[i] / 2; ++j) {                                     
+            if (((timeVec[i] - j) * j) > distanceVec[i]) {                                       // If it found a way to win, then add the substraction to the total.
                 total *= (timeVec[i] + 1) - (j+j);
                 break;
+                fixBoundary(timeVec[i], distanceVec[i], (timeVec[i] - num) / 2, -1);
+                fixBoundary(timeVec[i], distanceVec[i], (timeVec[i] + num) / 2, +1);
             }
         }
+    }
+
+    return total;
+    */
+
+    for (int i = 0; i < timeVec.size(); ++i) {                                           // Alternative way to solve the problem, using quadratic formula.
+        num = std::sqrt(timeVec[i] * timeVec[i] - 4 * distanceVec[i]);
+        firstWin = fixBoundary(timeVec[i], distanceVec[i], (timeVec[i] - num) / 2, -1);
+        lastWin = fixBoundary(timeVec[i], distanceVec[i], (timeVec[i] + num) / 2, +1);
+        total *= lastWin - firstWin + 1;
     }
 
     return total;
@@ -415,19 +426,26 @@ int adv6First(const std::string& textFile) {
 // ADV 6 - LAST PART
 long long adv6Last(const std::string& textFile) {
     std::ifstream inputFile(textFile);                                                      // Input stream from the textfile.
-    std::string line, numString, totalNum;
-    long long total{0}, time{}, distance{};
-    std::istringstream lineStream;
+    std::string line, numString, totalNum;                                                  // String that holds each line from the textfile, the number casted as string, and the total.
+    long long time{}, distance{}, num{}, firstWin{}, lastWin{};                             // Time, and distance values. Also, the first and last way to win, and an arbitrary number.
+    std::istringstream lineStream;                                                          // Input stream that substract the content from the textfile.
 
-    anotherAddTimeAndDistance(inputFile, lineStream, line, numString, totalNum, time);
-    anotherAddTimeAndDistance(inputFile, lineStream, line, numString, totalNum, distance);
+    anotherAddTimeAndDistance(inputFile, lineStream, line, numString, totalNum, time);      // Add the content of the time vector.
+    anotherAddTimeAndDistance(inputFile, lineStream, line, numString, totalNum, distance);  // Add the content of the distance vector.
 
-    for (int j = 0; j <= time / 2; ++j) {
-        if (((time - j) * j) > distance) {
+    /*
+    for (int j = 0; j <= time / 2; ++j) {                                                   // Prior wat to solve the problem, by iterating the range of time until found a way to win.
+        if (((time - j) * j) > distance) {                                                      // If it found a way to win, then add the substraction to the total.
             total = (time + 1) - (j+j);
             break;
         }
     }
 
     return total;
+    */
+
+    num = std::sqrt(time * time - 4 * distance);                                            // Alternative way to solve the problem, using quadratic formula.
+    firstWin = fixBoundary(time, distance, (time - num) / 2, -1);
+    lastWin = fixBoundary(time, distance, (time + num) / 2, +1);
+    return lastWin - firstWin + 1;
 }

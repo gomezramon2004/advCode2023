@@ -33,4 +33,6 @@ void recursiveMerge(const std::vector<std::pair<rangeNum, bool>>& seeds, const r
 void mergeSeeds(std::vector<std::pair<rangeNum, bool>>& rangeSeeds, std::vector<std::pair<rangeNum, bool>>& mergedRangeSeeds, rangeNum& currentSeed, rangeNum& nextSeed);
 
 void addTimeAndDistance(std::ifstream& input, std::istringstream& stream, std::string& line, int& num, std::vector<int>& vec);
+template <typename T>
+T fixBoundary(const T& time, const T& distance, T&& quadraticEq, const int&& edge);
 void anotherAddTimeAndDistance(std::ifstream& input, std::istringstream& stream, std::string& line, std::string& numString, std::string& totalNum, long long& total);
