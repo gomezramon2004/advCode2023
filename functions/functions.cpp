@@ -399,7 +399,7 @@ int adv6First(const std::string& textFile) {
     addTimeAndDistance(inputFile, lineStream, line, num, distanceVec);                  // Add the content of the distance vector.
 
     /*
-    for (int i = 0; i < timeVec.size(); ++i) {                                          // Prior wat to solve the problem, by iterating the range of time until found a way to win.
+    for (int i = 0; i < timeVec.size(); ++i) {                                          // Prior wat to solve the problem, by iterating the range of time until it found a way to win.
         for (int j = 0; j <= timeVec[i] / 2; ++j) {                                     
             if (((timeVec[i] - j) * j) > distanceVec[i]) {                                       // If it found a way to win, then add the substraction to the total.
                 total *= (timeVec[i] + 1) - (j+j);
@@ -434,7 +434,7 @@ long long adv6Last(const std::string& textFile) {
     anotherAddTimeAndDistance(inputFile, lineStream, line, numString, totalNum, distance);  // Add the content of the distance vector.
 
     /*
-    for (int j = 0; j <= time / 2; ++j) {                                                   // Prior wat to solve the problem, by iterating the range of time until found a way to win.
+    for (int j = 0; j <= time / 2; ++j) {                                                   // Prior wat to solve the problem, by iterating the range of time until it found a way to win.
         if (((time - j) * j) > distance) {                                                      // If it found a way to win, then add the substraction to the total.
             total = (time + 1) - (j+j);
             break;
@@ -450,6 +450,6 @@ long long adv6Last(const std::string& textFile) {
     return lastWin - firstWin + 1;
 }
 
-// ADV 7 - LAST PART
+// ADV 7 - FIRST PART
 int adv7irst(const std::string& textFile) {
 }
