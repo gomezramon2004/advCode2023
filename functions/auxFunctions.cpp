@@ -1,5 +1,7 @@
 #include "functions.hpp"
 #include "auxFunctions.hpp"
+#include <iostream>
+#include <fstream>
 
 // ADV 1 - LAST PART
 

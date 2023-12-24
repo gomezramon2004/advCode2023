@@ -1,5 +1,7 @@
 #include "functions.hpp"
 #include "auxFunctions.hpp"
+#include <iostream>
+#include <fstream>
 
 // ADV 1 - FIRST PART
 
@@ -521,4 +523,5 @@ int adv7First(const std::string& textFile) {
     checkTypeHand("KK677");
     checkTypeHand("KTJJT");
     checkTypeHand("QQQJA");
+    return 0;
 }
