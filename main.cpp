@@ -3,6 +3,9 @@
 
 int main() {
 
+    // Disable synchronization between C and C++ standard streams
+    std::ios_base::sync_with_stdio(false);
+
     //std::cout << adv1First("./textfiles/in1.txt") << "\n";
     //std::cout << adv1Last("./textfiles/in1.txt") << "\n";
     //std::cout << adv2First("./textfiles/in2.txt") << "\n";
