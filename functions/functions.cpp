@@ -376,8 +376,8 @@ long long adv5Last(const std::string& textFile) {
                 if (lastSeed > offsetEnd) rangeSeeds.emplace_back(rangeNum{offsetEnd, lastSeed}, false);
             } else newRangeSeeds.emplace_back(rangeNum{firstSeed, lastSeed}, currentChecked);    
         }
-
-        rangeSeeds = std::move(newRangeSeeds);
+        
+        rangeSeeds.swap(newRangeSeeds);
         newRangeSeeds.clear();
     }
 
@@ -451,77 +451,27 @@ long long adv6Last(const std::string& textFile) {
     firstWin = fixBoundary(time, distance, (time - num) / 2, -1);
     lastWin = fixBoundary(time, distance, (time + num) / 2, +1);
     return lastWin - firstWin + 1;
-}
-
-
-// TestDEBUG
-void checkTypeHand(std::string hand) {
-    std::vector<std::pair<char, int>> content;
-    for (int i = 0; i < hand.size(); ++i) {
-        auto itFound = std::find_if(content.begin(), content.end(), [hand_i = hand[i]](const auto& pair) {
-            return pair.first == hand_i;
-        });
-        if (itFound != content.end()) {
-            ++itFound->second;
-        } else {
-            content.emplace_back(hand[i], 1);
-        }
-    }
-
-    for (const auto& element : content) {
-        std::cout << element.first << " / " << element.second << "\n";
-    }
-    std::cout << "\n";
-
-
-    if (content.size() == 1 ) {
-        std::cout << "Five of a kind.\n";
-        return;
-    }
-
-    if (content.size() == 2 ) {
-        if (content[0].second == 4 || content[0].second == 1) {
-            std::cout << "Four of a kind.\n";
-            return;
-        }
-        std::cout << "Full House.\n";
-        return;
-    }
-
-    if (content.size() == 3 ) {
-        for (const auto& element : content) {
-            if (element.second == 2) {
-                std::cout << "Two pair.\n";
-                return;
-            } else if (element.second == 3) {
-                std::cout << "Three of a kind.\n";
-                return;
-            }
-        }
-        std::cout << "Full House.\n";
-        return;
-    }
-
-    if (content.size() == 4 ) {
-        std::cout << "One pair.\n";
-        return;
-    }
-
-    if (content.size() == 5 ) {
-        std::cout << "High Card.\n";
-        return;
-    }
-    
-}
-
-    
+}    
 
 // ADV 7 - FIRST PART
+
 int adv7First(const std::string& textFile) {
-    checkTypeHand("32T3K");
-    checkTypeHand("T55J5");
-    checkTypeHand("KK677");
-    checkTypeHand("KTJJT");
-    checkTypeHand("QQQJA");
+    std::ifstream inputFile(textFile);
+    std::string line, hand;
+    int bid;
+    std::istringstream lineStream;
+    DoubleLinkedList list;
+    const size_t LINE_COUNT = std::count(std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>(), '\n') + 1;    // Total amount of lines in the textfile.
+    inputFile.seekg(0);                                                                                                             // Reset file pointer to the beginning.
+   
+    while (std::getline(inputFile, line)) {
+        lineStream.str (line);
+        lineStream >> hand >> bid;
+        list.insertCard(hand, bid);
+        lineStream.clear();
+    }
+
+    list.displayCards();
+    std::cout << LINE_COUNT << "\n";
     return 0;
 }

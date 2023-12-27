@@ -36,3 +36,33 @@ void addTimeAndDistance(std::ifstream& input, std::istringstream& stream, std::s
 template <typename T>
 T fixBoundary(const T& time, const T& distance, T&& quadraticEq, const int&& edge);
 void anotherAddTimeAndDistance(std::ifstream& input, std::istringstream& stream, std::string& line, std::string& numString, std::string& totalNum, long long& total);
+
+class Card {
+private:
+    void Clear();
+public:
+    std::string hand;
+    int bid;
+    Card* next;
+    Card* prev;
+    Card();
+    Card(const Card& other);
+    Card& operator=(const Card& other);
+    ~Card();
+};
+
+class DoubleLinkedList {
+private:
+    void Clear();
+public:
+    Card* head;
+    Card* tail;
+    DoubleLinkedList();
+    DoubleLinkedList(const DoubleLinkedList& other);
+    DoubleLinkedList& operator=(const DoubleLinkedList& other);
+    DoubleLinkedList(DoubleLinkedList&& other);
+    DoubleLinkedList& operator=(DoubleLinkedList&& other);
+    ~DoubleLinkedList();
+    void insertCard(const std::string& hand, const int& bid);
+    void displayCards();
+};

@@ -257,8 +257,8 @@ void mergeSeeds(std::vector<std::pair<rangeNum, bool>>& rangeSeeds, std::vector<
             mergedRangeSeeds.emplace_back(currentSeed, false);
         }
     }
-
-    rangeSeeds = std::move(mergedRangeSeeds);
+    
+    rangeSeeds.swap(mergedRangeSeeds);
     mergedRangeSeeds.clear();
 }
 
@@ -288,6 +288,8 @@ T fixBoundary(const T& time, const T& distance, T&& quadraticEq, const int&& edg
 template int fixBoundary<int>(const int& time, const int& distance, int&& quadraticEq, const int&& edge);
 template long long fixBoundary<long long>(const long long& time, const long long& distance, long long&& quadraticEq, const int&& edge);
 
+// ADV 6 - Last Part
+
 // Calculate the add and distance values concatenating the numbers
 void anotherAddTimeAndDistance(std::ifstream& input, std::istringstream& stream, std::string& line, std::string& numString, std::string& totalNum, long long& total) {
     std::getline(input, line);
@@ -298,4 +300,160 @@ void anotherAddTimeAndDistance(std::ifstream& input, std::istringstream& stream,
     total = stoll(totalNum);
     totalNum = "";
     stream.clear();
+}
+
+// ADV 7 - First Part - Classes (Created by me instead of using a library to practice memory handling)
+
+
+// Class --- Card
+
+// Card - Clear
+void Card::Clear() {
+    this->next = nullptr;
+    this->prev = nullptr;
+}
+
+// Card - Constructor
+Card::Card() : hand(""), bid(0), next(nullptr), prev(nullptr) {}
+
+// Card - Copy Constructor
+Card::Card(const Card& other) : hand(other.hand), bid(other.bid), next(other.next), prev(other.prev) {}
+
+// Card - Copy Assignment Operator
+Card& Card::operator=(const Card& other) {
+    if (this != &other) {
+        this->hand = other.hand;
+        this->bid = other.bid;
+        this->next = other.next;
+        this->prev = other.prev;
+    }
+    return *this;
+}
+
+// Card - Move Constructor
+Card::Card(Card&& other) noexcept : hand(std::move(other.hand)), bid(std::move(other.bid)), next(other.next), prev(other.prev) {
+    other.next = other.prev = nullptr;
+}
+
+// Card - Move Assignment Operator
+Card& Card::operator=(Card&& other) noexcept {
+    if (this != &other) {
+        this->hand = std::move(other.hand);
+        this->bid = std::move(other.bid);
+        this->next = other.next;
+        this->prev = other.prev;
+        other.Clear();
+    }
+    return *this;
+}
+
+// Card - Destructor
+Card::~Card() { 
+    this->Clear();
+}
+
+
+// Class --- DoubleLinkedList 
+
+// DoubleLinkedList - Clear 
+void DoubleLinkedList::Clear() {
+    Card* currentTail = this->tail;
+
+    while (currentTail) {
+        Card* priorCard = currentTail->prev;
+        delete currentTail;
+        currentTail = priorCard;
+    }
+
+    this->head = this->tail = nullptr;
+}
+
+// DoubleLinkedList - Constructor
+DoubleLinkedList::DoubleLinkedList() : head(nullptr), tail(nullptr) {}
+
+// DoubleLinkedList - Copy Constructor
+DoubleLinkedList::DoubleLinkedList(const DoubleLinkedList& other) : head(nullptr), tail(nullptr) {
+    Card* currentCard = other.head;
+
+    while (currentCard) {
+        Card* newCard = new Card(*currentCard);
+
+        if (!this->head) {
+            this->head = this->tail = newCard;
+        } else {
+            this->tail->next = newCard;
+            newCard->prev = tail;
+            this->tail = newCard;
+        }
+
+        currentCard = currentCard->next;
+    }
+
+}
+
+// DoubleLinkedList - Copy Assignment Operator
+DoubleLinkedList& DoubleLinkedList::operator=(const DoubleLinkedList& other) {
+    if (this != &other) {
+        this->Clear();
+        Card* currentCard= other.head;
+
+        while (currentCard) {
+            Card* newCard = new Card(*currentCard);
+
+            if (!this->head) {
+                this->head = this->tail = newCard;
+            } else {
+                this->tail->next = newCard;
+                newCard->prev = tail;
+                this->tail = newCard;
+            }
+
+            currentCard = currentCard->next;
+        }
+        
+    }
+
+    return *this;
+}
+
+// DoubleLinkedList - Move Constructor
+DoubleLinkedList::DoubleLinkedList(DoubleLinkedList&& other) noexcept : head(std::move(other.head)), tail(std::move(other.tail)) {
+    other.head = other.tail = nullptr;
+}
+
+// DoubleLinkedList - Move Assignment Operator
+DoubleLinkedList& DoubleLinkedList::operator=(DoubleLinkedList&& other) noexcept {
+    if (this != &other) {
+        this->Clear();
+        this->head = std::move(other.head);
+        this->tail = std::move(other.tail);
+        other.head = other.tail = nullptr;
+    }
+    return *this;
+}
+
+// DoubleLinkedList - Destructor
+DoubleLinkedList::~DoubleLinkedList() { this->Clear(); }
+
+// DoubleLinkedList - Insert Card
+void DoubleLinkedList::insertCard(const std::string& hand, const int& bid) {
+    Card* newCard = new Card(hand, bid);
+
+    if (!this->head) {
+        this->head = this->tail = newCard;
+    } else {
+        this->tail->next = newCard;
+        newCard->prev = tail;
+        this->tail = newCard;
+    }
+}
+
+// DoubleLinkedList - Display
+void DoubleLinkedList::displayCards() {
+    Card* currentCard = this->head;
+
+    while (currentCard) {
+        std::cout << currentCard->hand << " " << currentCard->bid << "\n";
+        currentCard = currentCard->next;
+    }
 }

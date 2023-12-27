@@ -7,6 +7,7 @@
 #include <array>
 #include <algorithm>
 #include <set>
+#include <utility>
 
 int adv1First(const std::string& textFile);
 int adv1Last(const std::string& textFile);
