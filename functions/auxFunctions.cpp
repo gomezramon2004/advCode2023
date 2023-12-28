@@ -480,24 +480,28 @@ void DoubleLinkedList::insertCard(const std::string& hand, const int& bid) {
     std::unordered_map<char, int> content;
     Card* newCard = new Card(hand, bid);
     Card* currentCard = this->head;
+    int currentIndex{}, newIndex{};
 
     for (const auto& letter : hand) ++content[letter];
 
     this->addType(content, *newCard);
-    if (!this->head){
-         this->head = newCard;
-    } else {
-        while (currentCard->type > newCard->type && currentCard->next) {     
+    if (!this->head) this->head = newCard;
+    else {
+
+        while (currentCard->type < newCard->type && currentCard->next) {     
             currentCard = currentCard->next;    
         }
 
-        if (currentCard->type <= newCard->type) {
+        if (currentCard->type > newCard->type) {
             newCard->prev = currentCard->prev;
             currentCard->prev = newCard;
             newCard->next = currentCard;
             !newCard->prev ? this->head = newCard : newCard->prev->next = newCard;
+        } else if (currentCard->type == newCard->type) {
+           // TBC
         } else {
             newCard->prev = currentCard;
+            newCard->next = currentCard->next;
             currentCard->next = newCard;
         }
     }
