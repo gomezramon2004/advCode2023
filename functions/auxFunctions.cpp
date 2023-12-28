@@ -314,16 +314,20 @@ void Card::Clear() {
 }
 
 // Card - Constructor
-Card::Card() : hand(""), bid(0), next(nullptr), prev(nullptr) {}
+Card::Card() : hand(""), bid(0), type(NULLDATA), next(nullptr), prev(nullptr) {}
+
+// Card - Constructor with parameters
+Card::Card(const std::string& hand, const int& bid) : hand(hand), bid(bid), next(nullptr), prev(nullptr) {}
 
 // Card - Copy Constructor
-Card::Card(const Card& other) : hand(other.hand), bid(other.bid), next(other.next), prev(other.prev) {}
+Card::Card(const Card& other) : hand(other.hand), bid(other.bid), type(other.type), next(other.next), prev(other.prev) {}
 
 // Card - Copy Assignment Operator
 Card& Card::operator=(const Card& other) {
     if (this != &other) {
         this->hand = other.hand;
         this->bid = other.bid;
+        this->type = other.type;
         this->next = other.next;
         this->prev = other.prev;
     }
@@ -331,7 +335,7 @@ Card& Card::operator=(const Card& other) {
 }
 
 // Card - Move Constructor
-Card::Card(Card&& other) noexcept : hand(std::move(other.hand)), bid(std::move(other.bid)), next(other.next), prev(other.prev) {
+Card::Card(Card&& other) noexcept : hand(std::move(other.hand)), bid(std::move(other.bid)), type(std::move(other.type)), next(other.next), prev(other.prev) {
     other.next = other.prev = nullptr;
 }
 
@@ -340,6 +344,7 @@ Card& Card::operator=(Card&& other) noexcept {
     if (this != &other) {
         this->hand = std::move(other.hand);
         this->bid = std::move(other.bid);
+        this->type = std::move(other.type);
         this->next = other.next;
         this->prev = other.prev;
         other.Clear();
@@ -366,6 +371,41 @@ void DoubleLinkedList::Clear() {
     }
 
     this->head = this->tail = nullptr;
+}
+
+// DoubleLinkedList - Add Type of Card
+void DoubleLinkedList::addType(const std::unordered_map<char, int>& content, Card& currentCard) {
+    switch (content.size()) {
+        case 5: 
+            currentCard.type = HIGH_CARD;
+            return;
+        case 4:
+            currentCard.type = ONE_PAIR; 
+            return;
+        case 3: {
+            for (const auto& pair : content) {
+                if (pair.second == 3) {
+                    currentCard.type = THREE_OF_A_KIND;
+                    return;
+                }
+            }
+            currentCard.type = TWO_PAIR;
+            return;
+        }
+        case 2: {
+            for (const auto& pair : content) {
+                if (pair.second == 4) {
+                    currentCard.type = FOUR_OF_A_KIND;
+                    return;
+                }
+            }
+            currentCard.type = FULL_HOUSE;
+            return;
+        }
+        case 1: 
+            currentCard.type = FIVE_OF_A_KIND;
+            return;
+    }
 }
 
 // DoubleLinkedList - Constructor
@@ -437,23 +477,34 @@ DoubleLinkedList::~DoubleLinkedList() { this->Clear(); }
 
 // DoubleLinkedList - Insert Card
 void DoubleLinkedList::insertCard(const std::string& hand, const int& bid) {
+    std::unordered_map<char, int> content;
     Card* newCard = new Card(hand, bid);
+    Card* currentCard = this->tail;
 
+    for (const auto& letter : hand) {
+        ++content[letter];
+    }
+
+    this->addType(content, *newCard);
     if (!this->head) {
         this->head = this->tail = newCard;
     } else {
-        this->tail->next = newCard;
-        newCard->prev = tail;
-        this->tail = newCard;
+        while (newCard->type > currentCard->type && currentCard->prev) {
+            currentCard = currentCard->prev;
+        }
+        currentCard->prev = newCard;
+        newCard->next = currentCard;
+        currentCard = newCard;
     }
 }
+
 
 // DoubleLinkedList - Display
 void DoubleLinkedList::displayCards() {
     Card* currentCard = this->head;
 
     while (currentCard) {
-        std::cout << currentCard->hand << " " << currentCard->bid << "\n";
+        std::cout << currentCard->hand << " " << currentCard->bid << " " << currentCard->type << "\n";
         currentCard = currentCard->next;
     }
 }

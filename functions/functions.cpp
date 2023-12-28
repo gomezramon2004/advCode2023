@@ -461,8 +461,6 @@ int adv7First(const std::string& textFile) {
     int bid;
     std::istringstream lineStream;
     DoubleLinkedList list;
-    const size_t LINE_COUNT = std::count(std::istreambuf_iterator<char>(inputFile), std::istreambuf_iterator<char>(), '\n') + 1;    // Total amount of lines in the textfile.
-    inputFile.seekg(0);                                                                                                             // Reset file pointer to the beginning.
    
     while (std::getline(inputFile, line)) {
         lineStream.str (line);
@@ -472,6 +470,5 @@ int adv7First(const std::string& textFile) {
     }
 
     list.displayCards();
-    std::cout << LINE_COUNT << "\n";
     return 0;
 }

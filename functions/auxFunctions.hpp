@@ -37,31 +37,48 @@ template <typename T>
 T fixBoundary(const T& time, const T& distance, T&& quadraticEq, const int&& edge);
 void anotherAddTimeAndDistance(std::ifstream& input, std::istringstream& stream, std::string& line, std::string& numString, std::string& totalNum, long long& total);
 
+enum HandType {
+    NULLDATA = 0,
+    HIGH_CARD,
+    ONE_PAIR,
+    TWO_PAIR,
+    THREE_OF_A_KIND,
+    FULL_HOUSE,
+    FOUR_OF_A_KIND,
+    FIVE_OF_A_KIND
+};
+
 class Card {
 private:
     void Clear();
 public:
     std::string hand;
     int bid;
+    HandType type;
     Card* next;
     Card* prev;
     Card();
+    Card(const std::string& hand, const int& bid);
     Card(const Card& other);
     Card& operator=(const Card& other);
+    Card(Card&& other) noexcept;
+    Card& operator=(Card&& other) noexcept;
     ~Card();
 };
 
 class DoubleLinkedList {
 private:
+    //std::array<char, 13> strengthArr = {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'};
     void Clear();
+    void addType(const std::unordered_map<char, int>& content, Card& currentCard);
 public:
     Card* head;
     Card* tail;
     DoubleLinkedList();
     DoubleLinkedList(const DoubleLinkedList& other);
     DoubleLinkedList& operator=(const DoubleLinkedList& other);
-    DoubleLinkedList(DoubleLinkedList&& other);
-    DoubleLinkedList& operator=(DoubleLinkedList&& other);
+    DoubleLinkedList(DoubleLinkedList&& other) noexcept;
+    DoubleLinkedList& operator=(DoubleLinkedList&& other) noexcept;
     ~DoubleLinkedList();
     void insertCard(const std::string& hand, const int& bid);
     void displayCards();
