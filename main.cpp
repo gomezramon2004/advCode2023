@@ -20,6 +20,5 @@ int main() {
     //std::cout << adv6Last("./textfiles/in6.txt") << "\n";
     std::cout << adv7First("./textfiles/in7.txt") << "\n";
 
-
     return 0;
 }

@@ -1,76 +1,45 @@
 /*
 // TestDEBUG
-void checkTypeHand(std::string hand) {
-    std::vector<std::pair<char, int>> content;
-    for (int i = 0; i < hand.size(); ++i) {
-        auto itFound = std::find_if(content.begin(), content.end(), [hand_i = hand[i]](const auto& pair) {
-            return pair.first == hand_i;
-        });
-        if (itFound != content.end()) {
-            ++itFound->second;
-        } else {
-            content.emplace_back(hand[i], 1);
-        }
-    }
-
-    for (const auto& element : content) {
-        std::cout << element.first << " / " << element.second << "\n";
-    }
-    std::cout << "\n";
-
-
-    if (content.size() == 1 ) {
-        std::cout << "Five of a kind.\n";
-        return;
-    }
-
-    if (content.size() == 2 ) {
-        if (content[0].second == 4 || content[0].second == 1) {
-            std::cout << "Four of a kind.\n";
-            return;
-        }
-        std::cout << "Full House.\n";
-        return;
-    }
-
-    if (content.size() == 3 ) {
-        for (const auto& element : content) {
-            if (element.second == 2) {
-                std::cout << "Two pair.\n";
-                return;
-            } else if (element.second == 3) {
-                std::cout << "Three of a kind.\n";
-                return;
-            }
-        }
-        std::cout << "Full House.\n";
-        return;
-    }
-
-    if (content.size() == 4 ) {
-        std::cout << "One pair.\n";
-        return;
-    }
-
-    if (content.size() == 5 ) {
-        std::cout << "High Card.\n";
-        return;
-    }
-    
-}
-
-
+// DoubleLinkedList - Insert Card
 void DoubleLinkedList::insertCard(const std::string& hand, const int& bid) {
-    Card* newCard = new Card;
-    newCard->hand = hand;
-    newCard->bid = bid;
+    std::unordered_map<char, int> content;
+    Card* newCard = new Card(hand, bid);
+    Card* currentCard = this->head;
 
-    if (!tail) {
-        this->tail = newCard;
+    for (const auto& letter : hand) ++content[letter];
+
+    this->addType(content, *newCard);
+    if (!this->head){
+         this->head = newCard;
     } else {
-        tail->next = newCard;
-        newCard->prev = tail;
-        this->tail = newCard;
+
+        while (currentCard->type > newCard->type && currentCard->next) {
+            std::cout << currentCard->type << " > " << newCard->type << "\n";       
+            currentCard = currentCard->next;
+            std::cout << currentCard->type << " > " << newCard->type << "\n";       
+        }
+
+        std::cout << "\n\n";
+
+        if (currentCard->type <= newCard->type) {
+            std::cout << "AAA\n";
+            newCard->prev = currentCard->prev;
+            currentCard->prev = newCard;
+            newCard->next = currentCard;
+            !newCard->prev ? this->head = newCard : newCard->prev->next = newCard;
+        } else {
+            std::cout << "BBB\n";
+            newCard->prev = currentCard;
+            currentCard->next = newCard;
+        }
+       
+        std::cout << currentCard->hand << " /// " << currentCard->bid << " /// " << currentCard->type << " ///    " << currentCard->prev << " <------> " << currentCard->next;
+
+        std::cout << "\n";
+
+        std::cout << newCard->hand << " /// " << newCard->bid << " /// " <<  newCard->type <<" ///    " << newCard->prev << " <------> " << newCard->next;
+
+        std::cout << "\n\n";
     }
 }
 */

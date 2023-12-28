@@ -469,6 +469,7 @@ int adv7First(const std::string& textFile) {
         lineStream.clear();
     }
 
+    std::cout << "\n\n";
     list.displayCards();
     return 0;
 }

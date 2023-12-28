@@ -479,22 +479,27 @@ DoubleLinkedList::~DoubleLinkedList() { this->Clear(); }
 void DoubleLinkedList::insertCard(const std::string& hand, const int& bid) {
     std::unordered_map<char, int> content;
     Card* newCard = new Card(hand, bid);
-    Card* currentCard = this->tail;
+    Card* currentCard = this->head;
 
-    for (const auto& letter : hand) {
-        ++content[letter];
-    }
+    for (const auto& letter : hand) ++content[letter];
 
     this->addType(content, *newCard);
-    if (!this->head) {
-        this->head = this->tail = newCard;
+    if (!this->head){
+         this->head = newCard;
     } else {
-        while (newCard->type > currentCard->type && currentCard->prev) {
-            currentCard = currentCard->prev;
+        while (currentCard->type > newCard->type && currentCard->next) {     
+            currentCard = currentCard->next;    
         }
-        currentCard->prev = newCard;
-        newCard->next = currentCard;
-        currentCard = newCard;
+
+        if (currentCard->type <= newCard->type) {
+            newCard->prev = currentCard->prev;
+            currentCard->prev = newCard;
+            newCard->next = currentCard;
+            !newCard->prev ? this->head = newCard : newCard->prev->next = newCard;
+        } else {
+            newCard->prev = currentCard;
+            currentCard->next = newCard;
+        }
     }
 }
 
