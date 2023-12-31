@@ -71,6 +71,7 @@ private:
     std::array<char, 13> strArr = {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'};
     void Clear();
     void addType(const std::unordered_map<char, int>& content, Card& currentCard);
+    void recursiveHand(const Card* newCard, Card*& currCard, const int& i);
 public:
     Card* head;
     Card* tail;

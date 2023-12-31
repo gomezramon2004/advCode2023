@@ -408,6 +408,17 @@ void DoubleLinkedList::addType(const std::unordered_map<char, int>& content, Car
     }
 }
 
+// DoubleLinkedlist - Auxiliar Recursive Method
+void DoubleLinkedList::recursiveHand(const Card* newCard, Card*& currCard, const int& i) {
+    if (currCard->type == newCard->type && currCard->next) {
+        currCard = currCard->next;
+        int currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));
+        int newIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), newCard->hand[i]));
+        std::cout << newCard->hand << " " << newIndex << " " << currCard->hand << " " << currIndex << "\n";
+        if (newIndex > currIndex) recursiveHand(newCard, currCard, i);
+    }
+}
+
 // DoubleLinkedList - Constructor
 DoubleLinkedList::DoubleLinkedList() : head(nullptr), tail(nullptr) {}
 
@@ -511,6 +522,7 @@ void DoubleLinkedList::insertCard(const std::string& hand, const int& bid) {
                     newIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), newCard->hand[i]));
                     std::cout << newCard->hand << " " << newIndex << " " << currCard->hand << " " << currIndex << "\n";
                     if (newIndex < currIndex) {     // It means that the new card is stronger, so needs to be after
+                        recursiveHand(newCard, currCard, i);;
                         newCard->next = currCard->next;
                         currCard->next = newCard;
                         newCard->prev = currCard;
@@ -523,7 +535,7 @@ void DoubleLinkedList::insertCard(const std::string& hand, const int& bid) {
                     else break;
                 }
             }
-            
+
             newCard->prev = currCard;
             newCard->next = currCard->next;
             currCard->next = newCard;
