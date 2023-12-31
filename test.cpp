@@ -42,4 +42,43 @@ void DoubleLinkedList::insertCard(const std::string& hand, const int& bid) {
         std::cout << "\n\n";
     }
 }
+
+
+newCard->next = currentCard->next;
+currentCard->next = newCard;
+newCard->prev = currentCard;
+!newCard->next ? this->tail = newCard : newCard->next->prev = newCard;
+
+
+if (!newCard->next && !newCard->prev) {
+                newCard->prev = currCard;
+                newCard->next = currCard->next;
+                currCard->next = newCard;
+            }
+
+
+currCard = firstOfTheType;
+checked = false;
+while (currCard->type == newCard->type) {
+    currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));
+    newIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), newCard->hand[i]));
+    if (currIndex > newIndex) {
+        if (!checked) {
+            firstOfTheType = lastOfTheType = currCard;
+            checked = true;
+        }
+        else lastOfTheType = currCard;
+    }
+    if (currCard->next) currCard = currCard->next;
+    else break;
+}
+
+if (firstOfTheType == lastOfTheType) {
+    currCard = firstOfTheType;
+    newCard->next = currCard->next;
+    currCard->next = newCard;
+    newCard->prev = currCard;
+    !newCard->next ? this->tail = newCard : newCard->next->prev = newCard;
+    return;
+}
 */

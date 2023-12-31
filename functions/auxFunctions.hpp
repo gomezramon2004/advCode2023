@@ -68,7 +68,7 @@ public:
 
 class DoubleLinkedList {
 private:
-    std::array<char, 13> strengthArr = {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'};
+    std::array<char, 13> strArr = {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'};
     void Clear();
     void addType(const std::unordered_map<char, int>& content, Card& currentCard);
 public:

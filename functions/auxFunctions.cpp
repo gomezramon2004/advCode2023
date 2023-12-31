@@ -374,36 +374,36 @@ void DoubleLinkedList::Clear() {
 }
 
 // DoubleLinkedList - Add Type of Card
-void DoubleLinkedList::addType(const std::unordered_map<char, int>& content, Card& currentCard) {
+void DoubleLinkedList::addType(const std::unordered_map<char, int>& content, Card& currCard) {
     switch (content.size()) {
         case 5: 
-            currentCard.type = HIGH_CARD;
+            currCard.type = HIGH_CARD;
             return;
         case 4:
-            currentCard.type = ONE_PAIR; 
+            currCard.type = ONE_PAIR; 
             return;
         case 3: {
             for (const auto& pair : content) {
                 if (pair.second == 3) {
-                    currentCard.type = THREE_OF_A_KIND;
+                    currCard.type = THREE_OF_A_KIND;
                     return;
                 }
             }
-            currentCard.type = TWO_PAIR;
+            currCard.type = TWO_PAIR;
             return;
         }
         case 2: {
             for (const auto& pair : content) {
                 if (pair.second == 4) {
-                    currentCard.type = FOUR_OF_A_KIND;
+                    currCard.type = FOUR_OF_A_KIND;
                     return;
                 }
             }
-            currentCard.type = FULL_HOUSE;
+            currCard.type = FULL_HOUSE;
             return;
         }
         case 1: 
-            currentCard.type = FIVE_OF_A_KIND;
+            currCard.type = FIVE_OF_A_KIND;
             return;
     }
 }
@@ -413,10 +413,10 @@ DoubleLinkedList::DoubleLinkedList() : head(nullptr), tail(nullptr) {}
 
 // DoubleLinkedList - Copy Constructor
 DoubleLinkedList::DoubleLinkedList(const DoubleLinkedList& other) : head(nullptr), tail(nullptr) {
-    Card* currentCard = other.head;
+    Card* currCard = other.head;
 
-    while (currentCard) {
-        Card* newCard = new Card(*currentCard);
+    while (currCard) {
+        Card* newCard = new Card(*currCard);
 
         if (!this->head) {
             this->head = this->tail = newCard;
@@ -426,7 +426,7 @@ DoubleLinkedList::DoubleLinkedList(const DoubleLinkedList& other) : head(nullptr
             this->tail = newCard;
         }
 
-        currentCard = currentCard->next;
+        currCard = currCard->next;
     }
 
 }
@@ -435,10 +435,10 @@ DoubleLinkedList::DoubleLinkedList(const DoubleLinkedList& other) : head(nullptr
 DoubleLinkedList& DoubleLinkedList::operator=(const DoubleLinkedList& other) {
     if (this != &other) {
         this->Clear();
-        Card* currentCard= other.head;
+        Card* currCard= other.head;
 
-        while (currentCard) {
-            Card* newCard = new Card(*currentCard);
+        while (currCard) {
+            Card* newCard = new Card(*currCard);
 
             if (!this->head) {
                 this->head = this->tail = newCard;
@@ -448,7 +448,7 @@ DoubleLinkedList& DoubleLinkedList::operator=(const DoubleLinkedList& other) {
                 this->tail = newCard;
             }
 
-            currentCard = currentCard->next;
+            currCard = currCard->next;
         }
         
     }
@@ -479,30 +479,58 @@ DoubleLinkedList::~DoubleLinkedList() { this->Clear(); }
 void DoubleLinkedList::insertCard(const std::string& hand, const int& bid) {
     std::unordered_map<char, int> content;
     Card* newCard = new Card(hand, bid);
-    Card* currentCard = this->head;
-    int currentIndex{}, newIndex{};
+    Card* currCard = this->head;
+    Card* firstOfTheType = nullptr;
+    int currIndex{}, newIndex{};
+    bool checked = false;
 
     for (const auto& letter : hand) ++content[letter];
 
     this->addType(content, *newCard);
-    if (!this->head) this->head = newCard;
-    else {
 
-        while (currentCard->type < newCard->type && currentCard->next) {     
-            currentCard = currentCard->next;    
-        }
+    if (!this->head) {
+        this->head = newCard;
+    } else {
 
-        if (currentCard->type > newCard->type) {
-            newCard->prev = currentCard->prev;
-            currentCard->prev = newCard;
-            newCard->next = currentCard;
+        while (currCard->type < newCard->type && currCard->next) currCard = currCard->next;     
+
+        if (currCard->type > newCard->type) {
+            newCard->prev = currCard->prev;
+            currCard->prev = newCard;
+            newCard->next = currCard;
             !newCard->prev ? this->head = newCard : newCard->prev->next = newCard;
-        } else if (currentCard->type == newCard->type) {
-           // TBC
+        } else if (currCard->type == newCard->type) {
+            firstOfTheType = currCard;
+            std::cout << "\n\n\n";
+
+            for (int i = 0; i < newCard->hand.length(); i++) {
+                std::cout << "\n";
+                currCard = firstOfTheType;
+                while (currCard->type == newCard->type) {
+                    currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));
+                    newIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), newCard->hand[i]));
+                    std::cout << newCard->hand << " " << newIndex << " " << currCard->hand << " " << currIndex << "\n";
+                    if (newIndex < currIndex) {     // It means that the new card is stronger, so needs to be after
+                        newCard->next = currCard->next;
+                        currCard->next = newCard;
+                        newCard->prev = currCard;
+                        if (newCard->next) {
+                            newCard->next->prev = newCard;
+                        }
+                        return;
+                    }
+                    if (currCard->next) currCard = currCard->next;
+                    else break;
+                }
+            }
+            
+            newCard->prev = currCard;
+            newCard->next = currCard->next;
+            currCard->next = newCard;
         } else {
-            newCard->prev = currentCard;
-            newCard->next = currentCard->next;
-            currentCard->next = newCard;
+            newCard->prev = currCard;
+            newCard->next = currCard->next;
+            currCard->next = newCard;
         }
     }
 }
@@ -510,10 +538,10 @@ void DoubleLinkedList::insertCard(const std::string& hand, const int& bid) {
 
 // DoubleLinkedList - Display
 void DoubleLinkedList::displayCards() {
-    Card* currentCard = this->head;
+    Card* currCard = this->head;
 
-    while (currentCard) {
-        std::cout << currentCard->hand << " " << currentCard->bid << " " << currentCard->type << "\n";
-        currentCard = currentCard->next;
+    while (currCard) {
+        std::cout << currCard->hand << " " << currCard->bid << " " << currCard->type << "\n";
+        currCard = currCard->next;
     }
 }
