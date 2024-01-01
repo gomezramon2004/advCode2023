@@ -81,4 +81,31 @@ if (firstOfTheType == lastOfTheType) {
     !newCard->next ? this->tail = newCard : newCard->next->prev = newCard;
     return;
 }
+
+void DoubleLinkedList::putBefore(Card* newCard, Card currCard) {
+    newCard->next = currCard->next;
+    currCard->next = newCard;
+    newCard->prev = currCard;
+    !newCard->prev ? this->head = newCard : newCard->prev->next = newCard;
+}
+
+
+newCard->next = currCard->next;
+currCard->next = newCard;
+newCard->prev = currCard;
+if (newCard->next) newCard->next->prev = newCard;
+
+
+// DoubleLinkedlist - Auxiliar Recursive Method
+void DoubleLinkedList::recursiveHand(const Card* newCard, Card*& currCard, const int& i, const int& newIndex, int& currIndex, Card*& first, Card*& last) {
+    if (!currCard->next || currCard->next->type != newCard->type || currCard == last) return;
+    currCard = currCard->next;
+    currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));
+    if (newIndex < currIndex) recursiveHand(newCard, currCard, i, newIndex, currIndex, first, last);
+    else if (newIndex > currIndex) currCard = currCard->prev;
+    else {
+        first = currCard;
+        recursiveType(newCard, currCard, i, newIndex, currIndex, last);
+    }
+}
 */

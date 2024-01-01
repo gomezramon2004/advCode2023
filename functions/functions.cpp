@@ -458,7 +458,7 @@ long long adv6Last(const std::string& textFile) {
 int adv7First(const std::string& textFile) {
     std::ifstream inputFile(textFile);
     std::string line, hand;
-    int bid, counter{}, total{};
+    int bid{}, counter{}, total{};
     std::istringstream lineStream;
     DoubleLinkedList list;
    
@@ -469,14 +469,11 @@ int adv7First(const std::string& textFile) {
         lineStream.clear();
     }
 
-    list.displayCards();
-
-
     Card* currCard = list.head;
 
     while (currCard) {
         ++counter;
-        total += (currCard->bid) * counter;
+        total += currCard->bid * counter;
         currCard = currCard->next;
     }
 
