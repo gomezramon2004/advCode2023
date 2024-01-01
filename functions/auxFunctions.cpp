@@ -409,16 +409,31 @@ void DoubleLinkedList::addType(const std::unordered_map<char, int>& content, Car
 }
 
 // DoubleLinkedlist - Auxiliar Recursive Method
-void DoubleLinkedList::recursiveHand(const Card* newCard, Card*& currCard, const int& i) {
-    if (currCard->type == newCard->type && currCard->next) {
+void DoubleLinkedList::recursiveHand(const Card* newCard, Card*& currCard, const int& i, const int& newIndex, int& currIndex, const Card* last) {
+    if (currCard->next && currCard->next->type == newCard->type && currCard != last) {
         currCard = currCard->next;
-        int currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));
-        int newIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), newCard->hand[i]));
-        std::cout << newCard->hand << " " << newIndex << " " << currCard->hand << " " << currIndex << "\n";
-        if (newIndex > currIndex) recursiveHand(newCard, currCard, i);
+        currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));
+        if (newIndex < currIndex) recursiveHand(newCard, currCard, i, newIndex, currIndex, last);
+        else if (newIndex > currIndex) currCard = currCard->prev;
     }
 }
 
+// DoubleLinkedlist - Another Auxiliar Recursive Method
+void DoubleLinkedList::recursiveType(const Card* newCard, Card*& currCard, const int& i, const int& newIndex, int& currIndex, Card*& last) {
+    if (currCard->next && currCard->next->type == newCard->type && currCard != last) {
+        currCard = currCard->next;
+        currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));
+        if (newIndex == currIndex) recursiveType(newCard, currCard, i, newIndex, currIndex, last);
+        else {
+            currCard = currCard->prev;
+            last = currCard;
+            return;
+        }
+    } else {
+        last = currCard;
+        return;
+    }
+}
 // DoubleLinkedList - Constructor
 DoubleLinkedList::DoubleLinkedList() : head(nullptr), tail(nullptr) {}
 
@@ -491,9 +506,9 @@ void DoubleLinkedList::insertCard(const std::string& hand, const int& bid) {
     std::unordered_map<char, int> content;
     Card* newCard = new Card(hand, bid);
     Card* currCard = this->head;
-    Card* firstOfTheType = nullptr;
+    Card* firstOfKind = nullptr;
+    Card* lastOfKind = nullptr;
     int currIndex{}, newIndex{};
-    bool checked = false;
 
     for (const auto& letter : hand) ++content[letter];
 
@@ -511,29 +526,37 @@ void DoubleLinkedList::insertCard(const std::string& hand, const int& bid) {
             newCard->next = currCard;
             !newCard->prev ? this->head = newCard : newCard->prev->next = newCard;
         } else if (currCard->type == newCard->type) {
-            firstOfTheType = currCard;
-            std::cout << "\n\n\n";
+            firstOfKind = currCard;
 
             for (int i = 0; i < newCard->hand.length(); i++) {
-                std::cout << "\n";
-                currCard = firstOfTheType;
-                while (currCard->type == newCard->type) {
-                    currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));
-                    newIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), newCard->hand[i]));
-                    std::cout << newCard->hand << " " << newIndex << " " << currCard->hand << " " << currIndex << "\n";
-                    if (newIndex < currIndex) {     // It means that the new card is stronger, so needs to be after
-                        recursiveHand(newCard, currCard, i);;
-                        newCard->next = currCard->next;
-                        currCard->next = newCard;
-                        newCard->prev = currCard;
-                        if (newCard->next) {
-                            newCard->next->prev = newCard;
-                        }
-                        return;
+                currCard = firstOfKind;
+                if (newCard->hand == "7757K") std::cout << newCard->hand << " " << currCard->hand << " " << firstOfKind->hand << " ";
+                if (i != 0) std::cout << lastOfKind->hand << " " << "\n\n";
+                else std::cout << "\n\n";
+                currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));
+                newIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), newCard->hand[i]));
+                if (newIndex < currIndex) {     // It means that the new card is stronger, so needs to be after
+                    recursiveHand(newCard, currCard, i, newIndex, currIndex, lastOfKind);
+                    if (newIndex == currIndex) {
+                        firstOfKind = currCard;
+                        recursiveType(newCard, currCard, i, newIndex, currIndex, lastOfKind);
+                        continue;
                     }
-                    if (currCard->next) currCard = currCard->next;
-                    else break;
-                }
+                    newCard->next = currCard->next;
+                    currCard->next = newCard;
+                    newCard->prev = currCard;
+                    if (newCard->next) newCard->next->prev = newCard;
+                    return;
+                } else if (newIndex > currIndex) {
+                    newCard->prev = currCard->prev;
+                    currCard->prev = newCard;
+                    newCard->next = currCard;
+                    !newCard->prev ? this->head = newCard : newCard->prev->next = newCard;
+                    return;
+                } else {
+                    firstOfKind = currCard;
+                    recursiveType(newCard, currCard, i, newIndex, currIndex, lastOfKind);
+                }   
             }
 
             newCard->prev = currCard;
