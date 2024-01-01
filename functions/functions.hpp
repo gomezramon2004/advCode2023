@@ -22,3 +22,4 @@ long long adv5Last(const std::string& textFile);
 int adv6First(const std::string& textFile);
 long long adv6Last(const std::string& textFile);
 int adv7First(const std::string& textFile);
+int adv7Last(const std::string& textFile);
