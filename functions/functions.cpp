@@ -456,22 +456,22 @@ long long adv6Last(const std::string& textFile) {
 // ADV 7 - FIRST PART
 
 int adv7First(const std::string& textFile) {
-    std::ifstream inputFile(textFile);
-    std::string line, hand;
-    int bid{}, counter{}, total{};
-    std::istringstream lineStream;
-    DoubleLinkedList list;
+    std::ifstream inputFile(textFile);                  // Input stream from the textfile.
+    std::string line, hand;                             // String that holds each line from the textfile. Hand from the card.
+    int bid{}, counter{}, total{};                      // Bid from the card. Counter. Total result.
+    std::istringstream lineStream;                      // Input stream that substract the content from the textfile.
+    DoubleLinkedList list;                              // Double Linked List object that stores perfectly the cards.
    
-    while (std::getline(inputFile, line)) {
+    while (std::getline(inputFile, line)) {             // Add the content into the list, line by line
         lineStream.str (line);
         lineStream >> hand >> bid;
-        list.insertCard(hand, bid);
+        list.insertCard(hand, bid);                          // Insert hand and bid.
         lineStream.clear();
     }
 
-    Card* currCard = list.head;
+    Card* currCard = list.head;                         // Created a pointer to the first card of the list.
 
-    while (currCard) {
+    while (currCard) {                                  // Traverse the list and make the calculations.
         ++counter;
         total += currCard->bid * counter;
         currCard = currCard->next;

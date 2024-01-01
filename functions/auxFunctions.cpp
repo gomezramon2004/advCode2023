@@ -302,10 +302,10 @@ void anotherAddTimeAndDistance(std::ifstream& input, std::istringstream& stream,
     stream.clear();
 }
 
-// ADV 7 - First Part - Classes (Created by me instead of using a library to practice memory handling)
+// ADV 7 - Classes (Created by me instead of using a library to practice memory handling)
 
 
-// Class --- Card
+// Class ----- Card -----
 
 // Card - Clear
 void Card::Clear() {
@@ -356,7 +356,7 @@ Card& Card::operator=(Card&& other) noexcept {
 Card::~Card() { this->Clear(); }
 
 
-// Class --- DoubleLinkedList 
+// Class ----- DoubleLinkedList -----
 
 // DoubleLinkedList - Clear 
 void DoubleLinkedList::Clear() {
@@ -415,22 +415,22 @@ void DoubleLinkedList::addType(const std::unordered_map<char, int>& content, Car
 
 // DoubleLinkedlist - Auxiliar Recursive Method
 void DoubleLinkedList::recursiveHand(const Card* newCard, Card*& currCard, const int& i, const int& newIndex, int& currIndex, const Card* last) {
-    if (!currCard->next || currCard->next->type != newCard->type || currCard == last) return;
-    currCard = currCard->next;
-    currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));
-    if (newIndex < currIndex) recursiveHand(newCard, currCard, i, newIndex, currIndex, last);
-    else if (newIndex > currIndex) currCard = currCard->prev;
+    if (!currCard->next || currCard->next->type != newCard->type || currCard == last) return;               // Constraints.
+    currCard = currCard->next;                                                                              // Next Card.
+    currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));  // Calculate the new current index.
+    if (newIndex < currIndex) recursiveHand(newCard, currCard, i, newIndex, currIndex, last);               // If new index is still stronger, then recurse again.
+    else if (newIndex > currIndex) currCard = currCard->prev;                                               // If not, then return to the prior card.
 }
 
 // DoubleLinkedlist - Another Auxiliar Recursive Method
 void DoubleLinkedList::recursiveType(const Card* newCard, Card*& currCard, const int& i, const int& newIndex, int& currIndex, Card*& last) {
-    if (!currCard->next || currCard->next->type != newCard->type || currCard == last) {
+    if (!currCard->next || currCard->next->type != newCard->type || currCard == last) {                         // Constraints.
         last = currCard;
     } else {
-        currCard = currCard->next;
-        currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));
-        if (newIndex == currIndex) recursiveType(newCard, currCard, i, newIndex, currIndex, last);
-        else {
+        currCard = currCard->next;                                                                                  // Next Card.
+        currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));      // Calculate the new current index.
+        if (newIndex == currIndex) recursiveType(newCard, currCard, i, newIndex, currIndex, last);                  // If new index is still equal, then recurse again.
+        else {                                                                                                      // If not, then return to the prior card.
             currCard = currCard->prev;
             last = currCard;
         }
@@ -499,50 +499,50 @@ DoubleLinkedList::~DoubleLinkedList() { this->Clear(); }
 
 // DoubleLinkedList - Insert Card
 void DoubleLinkedList::insertCard(const std::string& hand, const int& bid) {
-    std::unordered_map<char, int> content;
-    int currIndex{}, newIndex{};
-    Card* newCard = new Card(hand, bid);
-    Card* currCard = this->head;
-    Card* firstOfKind = nullptr;
-    Card* lastOfKind = nullptr;
+    std::unordered_map<char, int> content;              // Unordered map that holds a certain character and how many times is it repeated.
+    int currIndex{}, newIndex{};                        // Current and New Index.
+    Card* newCard = new Card(hand, bid);                // New Card
+    Card* currCard = this->head;                        // Current Card.
+    Card* firstOfKind = nullptr;                        // Pointer to the first card that shares something from the new card.
+    Card* lastOfKind = nullptr;                         // Pointer to the first card that shares something from the new card.
 
-    for (const auto& letter : hand) ++content[letter];
-    this->addType(content, *newCard);
+    for (const auto& letter : hand) ++content[letter];  // Fill the unordered map using the hand from the new card.
+    this->addType(content, *newCard);                   // Add the type from the new card in base of the unordered map.
 
-    if (!this->head) {
+    if (!this->head) {                                  // If there's a empty list.
         this->head = newCard;
     } else {
         while (currCard->type < newCard->type && currCard->next) currCard = currCard->next;
         if (currCard->type > newCard->type) {
-            putBefore(newCard, currCard);
+            putBefore(newCard, currCard);                                                       // It means that the new card has a better type than the current.
         } else if (currCard->type == newCard->type) {
             firstOfKind = currCard;
 
-            for (int i = 0; i < newCard->hand.length(); i++) {
+            for (int i = 0; i < newCard->hand.length(); i++) {                                  // Check the characters of the hand, and compare it to another cards
                 currCard = firstOfKind;
                 currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));
                 newIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), newCard->hand[i]));
-                if (newIndex < currIndex) {                                                      // It means that the new card is stronger, so needs to be after.
+                if (newIndex < currIndex) { 
                     recursiveHand(newCard, currCard, i, newIndex, currIndex, lastOfKind);
                     if (newIndex == currIndex) {
                         firstOfKind = currCard;
                         recursiveType(newCard, currCard, i, newIndex, currIndex, lastOfKind);
                         continue;
                     }
-                    putAfter(newCard, currCard);
+                    putAfter(newCard, currCard);                                                // It means that the new card is stronger, so needs to be after.
                     return;
-                } else if (newIndex > currIndex) {                                              // It means that the current card is stronger, so needs to be before.
-                    putBefore(newCard, currCard);
+                } else if (newIndex > currIndex) {
+                    putBefore(newCard, currCard);                                               // It means that the current card is stronger, so needs to be before.
                     return;
-                } else {                                                                        // It means that both are equally stronger, so needs to recurse cards.
+                } else {
                     firstOfKind = currCard;
-                    recursiveType(newCard, currCard, i, newIndex, currIndex, lastOfKind);
+                    recursiveType(newCard, currCard, i, newIndex, currIndex, lastOfKind);       // It means that both are equally stronger, so needs to recurse cards.
                 }   
             }
 
-            putBefore(newCard, currCard);                                                       // If it finds that new and current cards have the same hands.
+            putBefore(newCard, currCard);                                                       // It means that new and current cards have the same hands and type.
         } else {
-            putAfter(newCard, currCard);
+            putAfter(newCard, currCard);                                                        // It means that the new card has a worse type than the current.
         }
     }
 }
