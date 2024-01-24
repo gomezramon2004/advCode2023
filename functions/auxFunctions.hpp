@@ -68,7 +68,7 @@ public:
 
 class DoubleLinkedList {
 private:
-    std::array<char, 13> strArr = {'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'};
+    std::array<char, 13> strArr;
     void Clear();
     void putBefore(Card* newCard, Card* currCard);
     void putAfter(Card* newCard, Card* currCard);
@@ -84,6 +84,7 @@ public:
     DoubleLinkedList(DoubleLinkedList&& other) noexcept;
     DoubleLinkedList& operator=(DoubleLinkedList&& other) noexcept;
     ~DoubleLinkedList();
-    void insertCard(const std::string& hand, const int& bid);
+    void setStr(const std::array<char, 13>&& arr);
+    void insertCard(const std::string& hand, const int& bid, const bool&& wildcard);
     void displayCards();
 };
