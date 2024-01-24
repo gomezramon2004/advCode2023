@@ -395,18 +395,16 @@ void DoubleLinkedList::addType(const std::unordered_map<char, int>& content, Car
         case 4: currCard.type = ONE_PAIR; return; 
         case 3: {
             for (const auto& pair : content) {
-                if (pair.second == 3) {
-                    currCard.type = THREE_OF_A_KIND; return;
-                }
+                std::cout << pair.first << " " << pair.second << "\n";
             }
+            std::cout << "\n\n\n";
             currCard.type = TWO_PAIR; return;
         }
         case 2: {
             for (const auto& pair : content) {
-                if (pair.second == 4) {
-                    currCard.type = FOUR_OF_A_KIND; return;
-                }
+                std::cout << pair.first << " " << pair.second << "\n";
             }
+            std::cout << "\n\n\n";
             currCard.type = FULL_HOUSE; return;
         }
         case 1: currCard.type = FIVE_OF_A_KIND; return;
