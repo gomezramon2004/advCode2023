@@ -302,10 +302,10 @@ void anotherAddTimeAndDistance(std::ifstream& input, std::istringstream& stream,
     stream.clear();
 }
 
-// ADV 7 - First Part - Classes (Created by me instead of using a library to practice memory handling)
+// ADV 7 - Classes (Created by me instead of using a library to practice memory handling)
 
 
-// Class --- Card
+// Class ----- Card -----
 
 // Card - Clear
 void Card::Clear() {
@@ -353,12 +353,10 @@ Card& Card::operator=(Card&& other) noexcept {
 }
 
 // Card - Destructor
-Card::~Card() { 
-    this->Clear();
-}
+Card::~Card() { this->Clear(); }
 
 
-// Class --- DoubleLinkedList 
+// Class ----- DoubleLinkedList -----
 
 // DoubleLinkedList - Clear 
 void DoubleLinkedList::Clear() {
@@ -373,67 +371,70 @@ void DoubleLinkedList::Clear() {
     this->head = this->tail = nullptr;
 }
 
+// DoubleLinkedlist - Put the Card Before
+void DoubleLinkedList::putBefore(Card* newCard, Card* currCard) {
+    newCard->prev = currCard->prev;
+    currCard->prev = newCard;
+    newCard->next = currCard;
+    !newCard->prev ? this->head = newCard : newCard->prev->next = newCard;
+}
+
+// DoubleLinkedlist - Put the Card After
+void DoubleLinkedList::putAfter(Card* newCard, Card* currCard) {
+    newCard->next = currCard->next;
+    currCard->next = newCard;
+    newCard->prev = currCard;
+    if (newCard->next) newCard->next->prev = newCard;
+}
+
+
 // DoubleLinkedList - Add Type of Card
-void DoubleLinkedList::addType(const std::unordered_map<char, int>& content, Card& currCard) {
+void DoubleLinkedList::addType(const std::unordered_map<char, int>& content, Card& currCard, const bool& wildcard) {
     switch (content.size()) {
-        case 5: 
-            currCard.type = HIGH_CARD;
-            return;
-        case 4:
-            currCard.type = ONE_PAIR; 
-            return;
+        case 5: currCard.type = HIGH_CARD; return;
+        case 4: currCard.type = ONE_PAIR; return; 
         case 3: {
             for (const auto& pair : content) {
-                if (pair.second == 3) {
-                    currCard.type = THREE_OF_A_KIND;
-                    return;
-                }
+                std::cout << pair.first << " " << pair.second << "\n";
             }
-            currCard.type = TWO_PAIR;
-            return;
+            std::cout << "\n\n\n";
+            currCard.type = TWO_PAIR; return;
         }
         case 2: {
             for (const auto& pair : content) {
-                if (pair.second == 4) {
-                    currCard.type = FOUR_OF_A_KIND;
-                    return;
-                }
+                std::cout << pair.first << " " << pair.second << "\n";
             }
-            currCard.type = FULL_HOUSE;
-            return;
+            std::cout << "\n\n\n";
+            currCard.type = FULL_HOUSE; return;
         }
-        case 1: 
-            currCard.type = FIVE_OF_A_KIND;
-            return;
+        case 1: currCard.type = FIVE_OF_A_KIND; return;
     }
 }
 
 // DoubleLinkedlist - Auxiliar Recursive Method
 void DoubleLinkedList::recursiveHand(const Card* newCard, Card*& currCard, const int& i, const int& newIndex, int& currIndex, const Card* last) {
-    if (currCard->next && currCard->next->type == newCard->type && currCard != last) {
-        currCard = currCard->next;
-        currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));
-        if (newIndex < currIndex) recursiveHand(newCard, currCard, i, newIndex, currIndex, last);
-        else if (newIndex > currIndex) currCard = currCard->prev;
-    }
+    if (!currCard->next || currCard->next->type != newCard->type || currCard == last) return;               // Constraints.
+    currCard = currCard->next;                                                                              // Next Card.
+    currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));  // Calculate the new current index.
+    if (newIndex < currIndex) recursiveHand(newCard, currCard, i, newIndex, currIndex, last);               // If new index is still stronger, then recurse again.
+    else if (newIndex > currIndex) currCard = currCard->prev;                                               // If not, then return to the prior card.
 }
 
 // DoubleLinkedlist - Another Auxiliar Recursive Method
 void DoubleLinkedList::recursiveType(const Card* newCard, Card*& currCard, const int& i, const int& newIndex, int& currIndex, Card*& last) {
-    if (currCard->next && currCard->next->type == newCard->type && currCard != last) {
-        currCard = currCard->next;
-        currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));
-        if (newIndex == currIndex) recursiveType(newCard, currCard, i, newIndex, currIndex, last);
-        else {
+    if (!currCard->next || currCard->next->type != newCard->type || currCard == last) {                         // Constraints.
+        last = currCard;
+    } else {
+        currCard = currCard->next;                                                                                  // Next Card.
+        currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));      // Calculate the new current index.
+        if (newIndex == currIndex) recursiveType(newCard, currCard, i, newIndex, currIndex, last);                  // If new index is still equal, then recurse again.
+        else {                                                                                                      // If not, then return to the prior card.
             currCard = currCard->prev;
             last = currCard;
-            return;
         }
-    } else {
-        last = currCard;
-        return;
     }
 }
+
 // DoubleLinkedList - Constructor
 DoubleLinkedList::DoubleLinkedList() : head(nullptr), tail(nullptr) {}
 
@@ -443,7 +444,6 @@ DoubleLinkedList::DoubleLinkedList(const DoubleLinkedList& other) : head(nullptr
 
     while (currCard) {
         Card* newCard = new Card(*currCard);
-
         if (!this->head) {
             this->head = this->tail = newCard;
         } else {
@@ -451,10 +451,8 @@ DoubleLinkedList::DoubleLinkedList(const DoubleLinkedList& other) : head(nullptr
             newCard->prev = tail;
             this->tail = newCard;
         }
-
         currCard = currCard->next;
     }
-
 }
 
 // DoubleLinkedList - Copy Assignment Operator
@@ -465,7 +463,6 @@ DoubleLinkedList& DoubleLinkedList::operator=(const DoubleLinkedList& other) {
 
         while (currCard) {
             Card* newCard = new Card(*currCard);
-
             if (!this->head) {
                 this->head = this->tail = newCard;
             } else {
@@ -473,12 +470,9 @@ DoubleLinkedList& DoubleLinkedList::operator=(const DoubleLinkedList& other) {
                 newCard->prev = tail;
                 this->tail = newCard;
             }
-
             currCard = currCard->next;
         }
-        
     }
-
     return *this;
 }
 
@@ -501,71 +495,64 @@ DoubleLinkedList& DoubleLinkedList::operator=(DoubleLinkedList&& other) noexcept
 // DoubleLinkedList - Destructor
 DoubleLinkedList::~DoubleLinkedList() { this->Clear(); }
 
+// DoubleLinkedList - Set Strength Array
+void DoubleLinkedList::setStr(const std::array<char, 13>&& arr) {
+    for (int i = 0; i < strArr.size(); i++){
+        strArr[i] = arr[i];
+    } 
+}
+
 // DoubleLinkedList - Insert Card
-void DoubleLinkedList::insertCard(const std::string& hand, const int& bid) {
-    std::unordered_map<char, int> content;
-    Card* newCard = new Card(hand, bid);
-    Card* currCard = this->head;
-    Card* firstOfKind = nullptr;
-    Card* lastOfKind = nullptr;
-    int currIndex{}, newIndex{};
+void DoubleLinkedList::insertCard(const std::string& hand, const int& bid, const bool&& wildcard) {
+    std::unordered_map<char, int> content;              // Unordered map that holds a certain character and how many times is it repeated.
+    int currIndex{}, newIndex{};                        // Current and New Index.
+    Card* newCard = new Card(hand, bid);                // New Card
+    Card* currCard = this->head;                        // Current Card.
+    Card* firstOfKind = nullptr;                        // Pointer to the first card that shares something from the new card.
+    Card* lastOfKind = nullptr;                         // Pointer to the first card that shares something from the new card.
 
-    for (const auto& letter : hand) ++content[letter];
+    if (wildcard) {                                     // Fill the unordered map using the hand from the new card.
+        for (const auto& letter : hand) {
+            if (letter != 'J') ++content[letter];
+        }
+    } else for (const auto& letter : hand) ++content[letter];
 
-    this->addType(content, *newCard);
+    this->addType(content, *newCard, wildcard);         // Add the type from the new card in base of the unordered map.
 
-    if (!this->head) {
+    if (!this->head) {                                  // If there's a empty list.
         this->head = newCard;
     } else {
-
-        while (currCard->type < newCard->type && currCard->next) currCard = currCard->next;     
-
+        while (currCard->type < newCard->type && currCard->next) currCard = currCard->next;
         if (currCard->type > newCard->type) {
-            newCard->prev = currCard->prev;
-            currCard->prev = newCard;
-            newCard->next = currCard;
-            !newCard->prev ? this->head = newCard : newCard->prev->next = newCard;
+            putBefore(newCard, currCard);                                                       // It means that the new card has a better type than the current.
         } else if (currCard->type == newCard->type) {
             firstOfKind = currCard;
 
-            for (int i = 0; i < newCard->hand.length(); i++) {
+            for (int i = 0; i < newCard->hand.length(); i++) {                                  // Check the characters of the hand, and compare it to another cards
                 currCard = firstOfKind;
-                if (newCard->hand == "7757K") std::cout << newCard->hand << " " << currCard->hand << " " << firstOfKind->hand << " ";
-                if (i != 0) std::cout << lastOfKind->hand << " " << "\n\n";
-                else std::cout << "\n\n";
                 currIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), currCard->hand[i]));
                 newIndex = std::distance(strArr.begin(), std::find(strArr.begin(), strArr.end(), newCard->hand[i]));
-                if (newIndex < currIndex) {     // It means that the new card is stronger, so needs to be after
+                if (newIndex < currIndex) { 
                     recursiveHand(newCard, currCard, i, newIndex, currIndex, lastOfKind);
                     if (newIndex == currIndex) {
                         firstOfKind = currCard;
                         recursiveType(newCard, currCard, i, newIndex, currIndex, lastOfKind);
                         continue;
                     }
-                    newCard->next = currCard->next;
-                    currCard->next = newCard;
-                    newCard->prev = currCard;
-                    if (newCard->next) newCard->next->prev = newCard;
+                    putAfter(newCard, currCard);                                                // It means that the new card is stronger, so needs to be after.
                     return;
                 } else if (newIndex > currIndex) {
-                    newCard->prev = currCard->prev;
-                    currCard->prev = newCard;
-                    newCard->next = currCard;
-                    !newCard->prev ? this->head = newCard : newCard->prev->next = newCard;
+                    putBefore(newCard, currCard);                                               // It means that the current card is stronger, so needs to be before.
                     return;
                 } else {
                     firstOfKind = currCard;
-                    recursiveType(newCard, currCard, i, newIndex, currIndex, lastOfKind);
+                    recursiveType(newCard, currCard, i, newIndex, currIndex, lastOfKind);       // It means that both are equally stronger, so needs to recurse cards.
                 }   
             }
 
-            newCard->prev = currCard;
-            newCard->next = currCard->next;
-            currCard->next = newCard;
+            putBefore(newCard, currCard);                                                       // It means that new and current cards have the same hands and type.
         } else {
-            newCard->prev = currCard;
-            newCard->next = currCard->next;
-            currCard->next = newCard;
+            putAfter(newCard, currCard);                                                        // It means that the new card has a worse type than the current.
         }
     }
 }
