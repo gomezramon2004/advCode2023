@@ -389,22 +389,24 @@ void DoubleLinkedList::putAfter(Card* newCard, Card* currCard) {
 
 
 // DoubleLinkedList - Add Type of Card
-void DoubleLinkedList::addType(const std::unordered_map<char, int>& content, Card& currCard, const bool& wildcard) {
+void DoubleLinkedList::addType(const std::unordered_map<char, int>& content, Card& currCard) {
     switch (content.size()) {
         case 5: currCard.type = HIGH_CARD; return;
         case 4: currCard.type = ONE_PAIR; return; 
         case 3: {
             for (const auto& pair : content) {
-                std::cout << pair.first << " " << pair.second << "\n";
+                if (pair.second == 3) {
+                    currCard.type = THREE_OF_A_KIND; return;
+                }
             }
-            std::cout << "\n\n\n";
             currCard.type = TWO_PAIR; return;
         }
         case 2: {
             for (const auto& pair : content) {
-                std::cout << pair.first << " " << pair.second << "\n";
+                if (pair.second == 4) {
+                    currCard.type = FOUR_OF_A_KIND; return;
+                }
             }
-            std::cout << "\n\n\n";
             currCard.type = FULL_HOUSE; return;
         }
         case 1: currCard.type = FIVE_OF_A_KIND; return;
@@ -495,15 +497,8 @@ DoubleLinkedList& DoubleLinkedList::operator=(DoubleLinkedList&& other) noexcept
 // DoubleLinkedList - Destructor
 DoubleLinkedList::~DoubleLinkedList() { this->Clear(); }
 
-// DoubleLinkedList - Set Strength Array
-void DoubleLinkedList::setStr(const std::array<char, 13>&& arr) {
-    for (int i = 0; i < strArr.size(); i++){
-        strArr[i] = arr[i];
-    } 
-}
-
 // DoubleLinkedList - Insert Card
-void DoubleLinkedList::insertCard(const std::string& hand, const int& bid, const bool&& wildcard) {
+void DoubleLinkedList::insertCard(const std::string& hand, const int& bid) {
     std::unordered_map<char, int> content;              // Unordered map that holds a certain character and how many times is it repeated.
     int currIndex{}, newIndex{};                        // Current and New Index.
     Card* newCard = new Card(hand, bid);                // New Card
@@ -511,13 +506,8 @@ void DoubleLinkedList::insertCard(const std::string& hand, const int& bid, const
     Card* firstOfKind = nullptr;                        // Pointer to the first card that shares something from the new card.
     Card* lastOfKind = nullptr;                         // Pointer to the first card that shares something from the new card.
 
-    if (wildcard) {                                     // Fill the unordered map using the hand from the new card.
-        for (const auto& letter : hand) {
-            if (letter != 'J') ++content[letter];
-        }
-    } else for (const auto& letter : hand) ++content[letter];
-
-    this->addType(content, *newCard, wildcard);         // Add the type from the new card in base of the unordered map.
+    for (const auto& letter : hand) ++content[letter];  // Fill the unordered map using the hand from the new card.
+    this->addType(content, *newCard);                   // Add the type from the new card in base of the unordered map.
 
     if (!this->head) {                                  // If there's a empty list.
         this->head = newCard;

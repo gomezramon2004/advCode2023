@@ -461,17 +461,13 @@ int adv7First(const std::string& textFile) {
     int bid{}, counter{}, total{};                      // Bid from the card. Counter. Total result.
     std::istringstream lineStream;                      // Input stream that substract the content from the textfile.
     DoubleLinkedList list;                              // Double Linked List object that stores perfectly the cards.
-
-    list.setStr({'A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'});     // Set the strength array.
    
     while (std::getline(inputFile, line)) {             // Add the content into the list, line by line
         lineStream.str (line);
         lineStream >> hand >> bid;
-        list.insertCard(hand, bid, false);                          // Insert hand and bid.
+        list.insertCard(hand, bid);                          // Insert hand and bid.
         lineStream.clear();
     }
-
-    list.displayCards();
 
     Card* currCard = list.head;                         // Created a pointer to the first card of the list.
 
@@ -483,5 +479,3 @@ int adv7First(const std::string& textFile) {
 
     return total;
 }
-
-// ADV 7 - LAST PART
